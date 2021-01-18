@@ -140,6 +140,6 @@ const Routers: FC = () => {
 
 ## Development
 
-`yarn`
-`preview=true yarn dev`
-`yarn build`
+- `yarn`
+- `preview=true yarn dev`
+- `yarn build`
