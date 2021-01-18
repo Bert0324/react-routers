@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+	  "outDir": "./dist/",
+	  "noImplicitAny": false,
+	  "module": "CommonJS",
+	  "allowSyntheticDefaultImports": true,
+	  "target": "es5",
+	  "jsx": "react",
+	  "allowJs": true,
+	  "sourceMap": true,
+	  "noEmit": true,
+	  "declaration": true,
+	  "lib": ["ES2016", "ES2015", "DOM"]
+	}
+}
