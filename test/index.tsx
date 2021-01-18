@@ -11,22 +11,37 @@ const App: FC = () => {
             <Routers 
                 routers={[
                     {
-                        path: '/page1',
+                        path: '/page1',  // test/page1
                         name: 'page1',
-                        Component: async () => () => <>
-                            page1
-                            <Link to='/page2'>page2</Link>
-                        </>
+                        Component: async () => () => (
+                            <>
+                                page1
+                                <Link to='/page2'>page2</Link>
+                            </>
+                        ),
+                        afterRoute: (from, to) => {
+                            console.log(from ,to);
+                        }
                     },
                     {
-                        path: '/page2',
-                        name: 'page2',
-                        Component: async () => () => <>page2</>
+                        path: '/page2',  // test/page2
+                        Component: async () => () => <Link to='/page2/page3'>page2</Link>,
+                        children: [
+                            {
+                                path: '/page3',     // test/page2/page3
+                                name: 'page3',
+                                Component: async () => () => <>page3</>,
+                                beforeRoute: (from, to) => {
+                                    console.log(from ,to);
+                                    return false;
+                                },
+                            }
+                        ]
                     }
                 ]}
                 beforeEach={async (from, to) => {
-                    console.log('beforeEach', from, to);
                     await asyncTask();
+                    console.log('beforeEach', from, to);
                 }}
                 redirect='/page1'
             />

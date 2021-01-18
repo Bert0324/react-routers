@@ -23,7 +23,7 @@
   "scripts": {
     "cross-env": "cross-env TS_NODE_PROJECT=\"./tsconfig.build.json\"",
     "build": "yarn cross-env webpack --config \"./webpack.config.ts\" --progress",
-    "dev": "preview=true yarn cross-env webpack serve --config \"./webpack.config.ts\""
+    "dev": "yarn cross-env webpack serve --config \"./webpack.config.ts\""
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

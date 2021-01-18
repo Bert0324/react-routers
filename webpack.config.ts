@@ -1,3 +1,4 @@
+import { Configuration } from 'webpack';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import TerserWebpackPlugin from 'terser-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -22,6 +23,7 @@ export default {
         'react-dom': 'react-dom',
         'react-router-dom': 'react-router-dom'
     } : undefined,
+    devtool: 'source-map',
     entry: `${__dirname}/${isBuilding ? 'src' : 'test'}/index.ts${isBuilding ? '' : 'x'}`,
     output: {
         path: `${__dirname}/dist`,
@@ -142,4 +144,4 @@ export default {
         disableHostCheck: true,
         proxy: {},
     },
-};
+} as Configuration;
