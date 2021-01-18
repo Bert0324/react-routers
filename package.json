@@ -4,6 +4,17 @@
   "description": "router component",
   "author": "yuchen.huang <'yuchenhuang0324@gmail.com'>",
   "main": "dist/main.min.js",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "router",
+    "react-router-dom"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bert0324/react-routers"
+  },
+  "homepage": "https://github.com/Bert0324/react-routers#readme",
   "types": "index.d.ts",
   "files": [
     "dist",
