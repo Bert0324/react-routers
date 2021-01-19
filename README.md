@@ -120,7 +120,7 @@ const Routers: FC = () => {
                         },
                         children: [
                             {
-                                path: '/page3',     // test/page2/page3
+                                path: '/:page',     // test/page2/:page
                                 name: 'page3',
                                 Component: async () => () => <>page3</>,
                             }
