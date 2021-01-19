@@ -94,10 +94,11 @@ Use `react-routers` like as below:
 ```tsx
 import { Link, BrowserRouter } from 'react-router-dom';
 import { Routers } from 'react-routers';
+import { Skeleton } from 'antd';
 
 const asyncTask = () => new Promise<void>(resolve => setTimeout(() => resolve(), 1000));
 
-const Routers: FC = () => { 
+export const Routers: FC = () => { 
     return (
         <BrowserRouter basename='/test'>
             <Routers 
@@ -132,6 +133,7 @@ const Routers: FC = () => {
                     console.log('beforeEach', from, to);
                 }}
                 redirect='/page1'
+                fallback={() => <Skeleton active />}
             />
         </BrowserRouter>
     );
