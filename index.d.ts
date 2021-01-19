@@ -8,9 +8,12 @@ export type IAfterRoute = (from: string, to: string) => void;
  * the path in children will be jointed with the path in parent
  */
 export interface IPageRouter {
+    /**
+     * route path
+     */
     path: string;
     /**
-     * document.title
+     * document.title, if not set, will use original title in html
      */
     name?: string;
     /**
@@ -71,7 +74,7 @@ export interface IRouterProps {
 
 declare module 'react-routers' {
     /**
-     * `react-routers`, see document in: 
+     * `react-routers`, see document or demo in: 
      * - <https://github.com/Bert0324/react-routers>
      */
     const Routers: React.FC<IRouterProps>

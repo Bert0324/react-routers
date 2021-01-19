@@ -23,7 +23,7 @@ export interface IPageRouter {
      */
     path: string;
     /**
-     * document.title
+     * document.title, if not set, will use original title in html
      */
     name?: string;
     /**
@@ -57,13 +57,9 @@ export interface IRouterProps {
      */
     routers: IPageRouter[]; 
     /**
-     * A fallback react tree to show when a Suspense child (like React.lazy) suspends
+     * A fallback react tree to show when a Suspense child (like React.lazy) suspends, and before entering the route
      */
-    fallbackPage?: ComponentType<any>;
-    /**
-     * A fallback react tree to show before entering the route
-     */
-    loadingPage?: ComponentType<any>;
+    fallback?: ComponentType<{ from: string; to: string }>;
     /**
      * redirect path
      */
@@ -89,7 +85,9 @@ export interface IRouterProps {
 
 ## Demo
 
-Use `react-routers` like as below:
+Install `react-routers`:
+
+- `yarn add react-routers`
 
 ```tsx
 import { Link, BrowserRouter } from 'react-router-dom';
