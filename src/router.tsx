@@ -19,7 +19,7 @@ interface IRefObj {
 /**
  * router
  */
-const Router: FC<IRouterProps> = memo(({ routers, fallbackPage, loadingPage, redirect, beforeEach, afterEach }) => {
+const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach, afterEach }) => {
     const history = useHistory();
     const [loading, setLoading] = useState(true);
     const ref = useRef<IRefObj>({
@@ -43,7 +43,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallbackPage, loadingPage, red
                 beforeRoute: params.beforeRoute,
                 afterRoute: params.afterRoute
             };
-            return <Route exact path={params.path} key={params.name} component={() => <Component />} />;
+            return <Route exact path={params.path} key={params.path} component={() => <Component />} />;
         };
 
         /**
@@ -95,9 +95,21 @@ const Router: FC<IRouterProps> = memo(({ routers, fallbackPage, loadingPage, red
         });
     }, []);
 
+    const Loading = useMemo(() => {
+        const Fallback = fallback;
+        if (!Fallback) return <></>;
+        return (
+            <Fallback 
+                from={ref.current.stack[ref.current.stack.length - 1] || ''} 
+                to={history.location.pathname} 
+            />
+        );
+    }, [fallback, ref.current.stack[ref.current.stack.length - 1], history.location.pathname]);
+
     return (
-        <Suspense fallback={fallbackPage || <></>}>
-            {loading ? (loadingPage || <></>) : <Switch>
+        <Suspense fallback={Loading}>
+            {loading ? Loading : 
+            <Switch>
                 {paths}
                 {!!redirect && <Redirect to={redirect} />}
             </Switch>}

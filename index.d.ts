@@ -44,13 +44,9 @@ export interface IRouterProps {
      */
     routers: IPageRouter[]; 
     /**
-     * A fallback react tree to show when a Suspense child (like React.lazy) suspends
+     * A fallback react tree to show when a Suspense child (like React.lazy) suspends, and before entering the route
      */
-    fallbackPage?: ComponentType<any>;
-    /**
-     * A fallback react tree to show before entering the route
-     */
-    loadingPage?: ComponentType<any>;
+    fallback?: ComponentType<{ from: string; to: string }>;
     /**
      * redirect path
      */

@@ -17,7 +17,7 @@ const threadLoader = {
     }
 };
 export default {
-    mode: 'production',
+    mode: isBuilding ? 'production' : 'development',
     externals : isBuilding ? {
         'react': 'react',
         'react-dom': 'react-dom',
