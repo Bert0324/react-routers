@@ -20,7 +20,6 @@ export default {
     mode: isBuilding ? 'production' : 'development',
     externals : isBuilding ? {
         'react': 'react',
-        'react-dom': 'react-dom',
         'react-router-dom': 'react-router-dom'
     } : undefined,
     devtool: 'source-map',
