@@ -36,7 +36,7 @@ export interface IPageRouter {
     children?: IPageRouter[];
     /**
      * triggered before entering route
-     * - if return false, deny to enter route\
+     * - if return false, deny to enter route
      * - after `beforeEach`
      */
     beforeRoute?: IBeforeRoute;
