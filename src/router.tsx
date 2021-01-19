@@ -80,7 +80,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallbackPage, loadingPage, red
             ref.current.stack.push(to);
             setLoading(false);
             document.title = config?.name || ref.current.originalTitle;
-            config?.afterRoute?.(from, to);
+            await config?.afterRoute?.(from, to);
             afterEach?.(from, to);
         });
     };

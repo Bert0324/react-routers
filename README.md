@@ -6,6 +6,7 @@ A React Component for quick configuring route.
 
 - Route Configuration like `react-router-config`
 - Route Guard like `Vue`
+- Simple Lazy Load
 - Full Typescript Support
 
 ## Documents
@@ -16,6 +17,9 @@ A React Component for quick configuring route.
  * the path in children will be jointed with the path in parent
  */
 export interface IPageRouter {
+    /**
+     * route path
+     */
     path: string;
     /**
      * document.title
@@ -100,12 +104,7 @@ const Routers: FC = () => {
                     {
                         path: '/page1',  // test/page1
                         name: 'page1',
-                        Component: async () => () => (
-                            <>
-                                page1
-                                <Link to='/page2'>page2</Link>
-                            </>
-                        ),
+                        Component: async () => (await import('./PageComponent')).PageComponent,
                         afterRoute: (from, to) => {
                             console.log(from ,to);
                         }
@@ -113,7 +112,7 @@ const Routers: FC = () => {
                     {
                         path: '/page2',  // test/page2
                         name: 'page2',
-                        Component: async () => () => <Link to='/page2/page3'>page2</Link>,
+                        Component: () => () => <Link to='/page2/page3'>page2</Link>,
                         beforeRoute: (from, to) => {
                             console.log(from ,to);
                             return false;

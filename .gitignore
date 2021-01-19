@@ -4,3 +4,4 @@ size-plugin.json
 yarn-error.log
 .vscode
 lerna-debug.log
+/dist
