@@ -36,7 +36,7 @@ const App: FC = () => {
                         Component: async () => () => <Link to='/page2/page3'>page2</Link>,
                         children: [
                             {
-                                path: '/page3',     // test/page2/page3
+                                path: '/:page',     // test/page2/page3
                                 name: 'page3',
                                 Component: async () => () => <>page3</>,
                                 beforeRoute: (from, to) => {

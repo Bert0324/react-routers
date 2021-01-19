@@ -1,4 +1,5 @@
 import React, { lazy, Suspense, FC, memo, useState, useMemo, useEffect, useRef } from 'react';
+import { matchPath } from 'react-router';
 import { Switch, Route, Redirect, withRouter, useHistory } from 'react-router-dom';
 import { IPageRouter, IRouterProps, IBeforeRoute, IAfterRoute } from '../index.d';
 
@@ -74,7 +75,12 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
             };
             const to = history.location.pathname;
             if ((await beforeEach?.(from, to)) === false) return notEnterHandler();
-            const config = ref.current.map[to];
+
+            const config = ref.current.map[Object.keys(ref.current.map)?.find(key => matchPath(to, {
+                path: key,
+                exact: true
+            }))];
+
             if ((await config?.beforeRoute?.(from, to)) === false) return notEnterHandler();
             ref.current.stack.push(to);
             setLoading(false);

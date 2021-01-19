@@ -7,7 +7,7 @@ A React Component for quick configuring route.
 - Route Configuration like `react-router-config`
 - Route Guard like `Vue`
 - Simple Lazy Load
-- Tiny, unpacked Only **4KB**
+- Tiny, zlib packed Only 4KB
 - Full Typescript Support
 
 ## Documents
