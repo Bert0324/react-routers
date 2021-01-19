@@ -1,6 +1,5 @@
 import React, { lazy, Suspense, FC, memo, useState, useMemo, useEffect, useRef } from 'react';
 import { Switch, Route, Redirect, withRouter, useHistory } from 'react-router-dom';
-import { LoadingPage } from './loading';
 import { IPageRouter, IRouterProps, IBeforeRoute, IAfterRoute } from '../index.d';
 
 interface IRefObj {
@@ -97,8 +96,8 @@ const Router: FC<IRouterProps> = memo(({ routers, fallbackPage, loadingPage, red
     }, []);
 
     return (
-        <Suspense fallback={fallbackPage || <LoadingPage />}>
-            {loading ? (loadingPage || <LoadingPage />) : <Switch>
+        <Suspense fallback={fallbackPage || <></>}>
+            {loading ? (loadingPage || <></>) : <Switch>
                 {paths}
                 {!!redirect && <Redirect to={redirect} />}
             </Switch>}
