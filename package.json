@@ -1,6 +1,6 @@
 {
   "name": "react-routers",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "router component",
   "author": "yuchen.huang <'yuchenhuang0324@gmail.com'>",
   "main": "dist/main.min.js",
@@ -75,9 +75,7 @@
     "webpack": "^4.44.1",
     "webpack-cli": "^4.3.0",
     "webpack-dev-server": "^3.11.1",
-    "webpack-merge": "^5.7.3"
-  },
-  "dependencies": {
+    "webpack-merge": "^5.7.3",
     "react": "^17.0.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0"
