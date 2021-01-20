@@ -1,6 +1,6 @@
 {
   "name": "react-routers",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "router component",
   "author": "yuchen.huang <'yuchenhuang0324@gmail.com'>",
   "main": "dist/main.min.js",
@@ -24,6 +24,11 @@
     "cross-env": "cross-env TS_NODE_PROJECT=\"./tsconfig.build.json\"",
     "build": "yarn cross-env webpack --config \"./webpack.config.ts\" --progress",
     "dev": "yarn cross-env webpack serve --config \"./webpack.config.ts\""
+  },
+  "peerDependencies": {
+    "react": "^17.0.1",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -75,9 +80,6 @@
     "webpack": "^4.44.1",
     "webpack-cli": "^4.3.0",
     "webpack-dev-server": "^3.11.1",
-    "webpack-merge": "^5.7.3",
-    "react": "^17.0.1",
-    "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0"
+    "webpack-merge": "^5.7.3"
   }
 }
