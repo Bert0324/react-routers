@@ -20,6 +20,11 @@ A React Component for quick configuring route.
 ## Documents
 
 ```ts
+import { FC, CSSProperties, ComponentType } from 'react';
+
+export type IBeforeRoute = (from: string, to: string) => boolean | undefined | void | Promise<boolean | undefined | void>;
+export type IAfterRoute = (from: string, to: string) => void;
+
 /**
  * Router Configuration
  * the path in children will be jointed with the path in parent
@@ -43,7 +48,7 @@ export interface IPageRouter {
     children?: IPageRouter[];
     /**
      * triggered before entering route
-     * - if return false, deny to enter route
+     * - if return false, deny to enter route\
      * - after `beforeEach`
      */
     beforeRoute?: IBeforeRoute;
@@ -60,7 +65,7 @@ export interface IPageRouter {
  */
 export interface IRouterProps {
     /**
-     * routers configuration
+     * routers config
      */
     routers: IPageRouter[]; 
     /**
@@ -97,13 +102,14 @@ Install `react-routers`:
 - `yarn add react-routers`
 
 ```tsx
+import { FC } from 'react';
 import { Link, BrowserRouter } from 'react-router-dom';
 import { Routers } from 'react-routers';
 import { Skeleton } from 'antd';
 
 const asyncTask = () => new Promise<void>(resolve => setTimeout(() => resolve(), 1000));
 
-export const Routers: FC = () => { 
+export const IRouters: FC = () => { 
     return (
         <BrowserRouter basename='/test'>
             <Routers 

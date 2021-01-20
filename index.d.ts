@@ -1,4 +1,4 @@
-import React, { CSSProperties, ComponentType } from 'react';
+import { FC, CSSProperties, ComponentType } from 'react';
 
 export type IBeforeRoute = (from: string, to: string) => boolean | undefined | void | Promise<boolean | undefined | void>;
 export type IAfterRoute = (from: string, to: string) => void;
@@ -77,6 +77,6 @@ declare module 'react-routers' {
      * `react-routers`, see document or demo in: 
      * - <https://github.com/Bert0324/react-routers>
      */
-    const Routers: React.FC<IRouterProps>
+    const Routers: FC<IRouterProps>
     export { Routers };
 }
