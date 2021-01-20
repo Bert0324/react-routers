@@ -1,26 +1,14 @@
 import React, { lazy, Suspense, FC, memo, useState, useMemo, useEffect, useRef } from 'react';
-import { matchPath } from 'react-router';
 import { Switch, Route, Redirect, withRouter, useHistory } from 'react-router-dom';
-import { IPageRouter, IRouterProps, IBeforeRoute, IAfterRoute } from '../index.d';
-
-interface IRefObj {
-    historyChangeHandler?: () => void;
-    stack: string[];
-    isReplace: boolean;
-    originalTitle: string;
-    map: {
-        [path: string]: {
-            name: string;
-            beforeRoute: IBeforeRoute;
-            afterRoute: IAfterRoute;
-        }
-    }
-}
+import { IPageRouter, IRouterProps } from '../index.d';
+import { KeepAlive } from './cache';
+import { IRefObj } from './type.d';
+import { findMatchRoute } from './utils';
 
 /**
  * router
  */
-export const Routers: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach, afterEach, style }) => {
+export const Routers: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach, afterEach, style, keepAlive }) => {
     const history = useHistory();
     const [loading, setLoading] = useState(true);
     const ref = useRef<IRefObj>({
@@ -44,7 +32,12 @@ export const Routers: FC<IRouterProps> = memo(({ routers, fallback, redirect, be
                 beforeRoute: params.beforeRoute,
                 afterRoute: params.afterRoute
             };
-            return <Route exact path={params.path} key={params.path} component={() => <Component />} />;
+
+            return (
+                <KeepAlive currentRef={ref} pathKey={params.path}>
+                    <Route exact path={params.path} key={params.path} component={() => <Component />} />
+                </KeepAlive>
+            );
         };
 
         /**
@@ -76,10 +69,7 @@ export const Routers: FC<IRouterProps> = memo(({ routers, fallback, redirect, be
             const to = history.location.pathname;
             if ((await beforeEach?.(from, to)) === false) return notEnterHandler();
 
-            const config = ref.current.map[Object.keys(ref.current.map)?.find(key => matchPath(to, {
-                path: key,
-                exact: true
-            }))];
+            const config = findMatchRoute(ref.current.map, to);
 
             if ((await config?.beforeRoute?.(from, to)) === false) return notEnterHandler();
             ref.current.stack.push(to);
