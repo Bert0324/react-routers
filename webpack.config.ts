@@ -20,7 +20,9 @@ export default {
     mode: isBuilding ? 'production' : 'development',
     externals : isBuilding ? {
         'react': 'react',
-        'react-router-dom': 'react-router-dom'
+        'react-dom': 'react-dom',
+        'react-router-dom': 'react-router-dom',
+        'react-router': 'react-router'
     } : undefined,
     devtool: 'source-map',
     entry: `${__dirname}/${isBuilding ? 'src' : 'test'}/index.ts${isBuilding ? '' : 'x'}`,

@@ -14,7 +14,7 @@ A React Component for quick configuring route.
 - Route Guard like `Vue`
 - Simple Lazy Load
 - Change `document.title` with Configuration
-- Tiny, zlib packed Only 4KB
+- Tiny, zlib packed Only 1KB
 - Full Typescript Support
 
 ## Documents

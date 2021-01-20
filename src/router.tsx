@@ -20,7 +20,7 @@ interface IRefObj {
 /**
  * router
  */
-const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach, afterEach }) => {
+export const Routers: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach, afterEach, style }) => {
     const history = useHistory();
     const [loading, setLoading] = useState(true);
     const ref = useRef<IRefObj>({
@@ -113,18 +113,15 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
     }, [fallback, ref.current.stack[ref.current.stack.length - 1], history.location.pathname]);
 
     return (
-        <Suspense fallback={Loading}>
-            {loading ? Loading : 
-            <Switch>
-                {paths}
-                {!!redirect && <Redirect to={redirect} />}
-            </Switch>}
-        </Suspense>
+        <div style={style}>
+            <Suspense fallback={Loading}>
+                {loading ? Loading : 
+                <Switch>
+                    {paths}
+                    {!!redirect && <Redirect to={redirect} />}
+                </Switch>}
+            </Suspense>
+        </div>
     );
 });
 
-export const Routers: FC<IRouterProps> = memo((props) => (
-    <div style={props.style}>
-       <Router {...props} />
-    </div>
-));
