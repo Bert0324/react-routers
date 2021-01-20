@@ -1,5 +1,4 @@
-import { ReactNode } from 'react';
-import { IBeforeRoute, IAfterRoute } from "../index.d";
+import { IBeforeRoute, IAfterRoute } from "../..";
 
 export interface IRefObj {
     historyChangeHandler?: () => void;
@@ -11,7 +10,12 @@ export interface IRefObj {
             name: string;
             beforeRoute: IBeforeRoute;
             afterRoute: IAfterRoute;
-            node?: ReactNode;
         }
-    }
+    };
+    actives: {
+        [path: string]: (() => void)[];
+    };
+    deactives: {
+        [path: string]: (() => void)[];
+    };
 }
