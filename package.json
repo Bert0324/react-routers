@@ -1,6 +1,6 @@
 {
   "name": "react-routers",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "router component",
   "author": "yuchen.huang <'yuchenhuang0324@gmail.com'>",
   "main": "dist/main.min.js",
