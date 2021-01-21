@@ -90,7 +90,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
             const config = findMatchRoute(data.map, to);
             if (!config && redirect) return notEnterHandler(redirect, true);
             if (!config && !redirect) {
-                setLoading(false);
+                return setLoading(false);
             }
                 
             const from = data.stack[data.stack.length - 1] || '';

@@ -15,7 +15,6 @@ export const findMatchRoute = <T>(map: { [key: string]: T }, path: string) => {
 };
 
 export const filterMatchRoutes = <T>(map: { [key: string]: T }, path: string) => {
-    console.log(map, path);
     return Object.keys(map).filter(key => matchPath(path, getOptions(key))).reduce((acc, key) => {
         acc.push(map[key]);
         return acc;

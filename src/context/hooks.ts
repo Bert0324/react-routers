@@ -4,6 +4,10 @@ import { notExistPath } from "../utils/constants";
 import { findMatch, findMatchPath } from "../utils/utils";
 import { useRefContext } from "./context";
 
+/**
+ * push active callback to ref
+ * @param effect 
+ */
 export const useActive = (effect: () => void) => {
     const data = useRefContext();
     const history = useHistory();
@@ -23,6 +27,10 @@ export const useActive = (effect: () => void) => {
     }, []);
 };
 
+/**
+ * push deactive callback to ref
+ * @param effect 
+ */
 export const useDeActive = (effect: () => void) => {
     const { deactives, map } = useRefContext();
     const history = useHistory();

@@ -52,13 +52,13 @@ const App: FC = () => {
                     }
                 ]}
                 beforeEach={async (from, to) => {
-                    // await asyncTask();
+                    await asyncTask();
                     console.log('beforeEach', from, to, data);
                 }}
                 redirect='/page1'
                 fallback={LoadingPage}
             />            
-            {/* <Routers 
+            <Routers 
                 routers={[
                     // {
                     //     path: '/',
@@ -75,7 +75,7 @@ const App: FC = () => {
                     },
                 ]}
                 fallback={LoadingPage}
-            /> */}
+            />
         </BrowserRouter>
     );
 };
