@@ -81,6 +81,11 @@ export interface IRouterProps {
      * - default is `false`
      */
     keepAlive?: boolean;
+    /**
+     * switch
+     *  - default is `true`
+     */
+    switchRoute?: boolean;
 }
 
 declare module 'react-routers' {

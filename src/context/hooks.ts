@@ -1,25 +1,43 @@
 import { useEffect } from "react";
 import { useHistory } from "react-router";
+import { notExistPath } from "../utils/constants";
+import { findMatchPath } from "../utils/utils";
 import { useRefContext } from "./context";
 
 export const useActive = (effect: () => void) => {
-    const { actives } = useRefContext();
+    const data = useRefContext();
     const history = useHistory();
     useEffect(() => {
-       if (!actives[history.location.pathname]) {
-           actives[history.location.pathname] = [];
-       }
-       actives[history.location.pathname].push(effect);
+        const key = findMatchPath(data.map, history.location.pathname);
+        if (key !== notExistPath) {
+            if (!data.actives[key]) {
+                data.actives[key] = [];
+            }
+            data.actives[key].push(effect);
+        }
+        return () => {
+            if (key !== notExistPath) {
+                data.actives[key] = data.actives[key]?.filter(item => item !== effect);
+            }
+        };
     }, []);
 };
 
 export const useDeActive = (effect: () => void) => {
-    const { deactives } = useRefContext();
+    const { deactives, map } = useRefContext();
     const history = useHistory();
     useEffect(() => {
-        if (!deactives[history.location.pathname]) {
-            deactives[history.location.pathname] = [];
-        }
-        deactives[history.location.pathname].push(effect);
+       const key = findMatchPath(map, history.location.pathname);
+       if (key !== notExistPath) {
+           if (!deactives[key]) {
+            deactives[key] = [];
+           }
+           deactives[key].push(effect);
+       }
+       return () => {
+           if (key !== notExistPath) {
+                deactives[key] = deactives[key]?.filter(item => item !== effect)
+           }
+       };
     }, []);
 };

@@ -8,7 +8,7 @@ import { findMatchRoute } from '../utils/utils';
 /**
  * router
  */
-const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach, afterEach, style, keepAlive }) => {
+const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach, afterEach, style, keepAlive, switchRoute = true }) => {
     const history = useHistory();
     const [loading, setLoading] = useState(true);
     const data = useRefContext();
@@ -32,18 +32,26 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
          */
         const Page = (params: IPageRouter) => {
             if (!params.Component) return false;
-            const Component = lazy(async () => ({ default: withRouter(await params.Component!()) }));
-            data.map[params.path] = {
-                name: params.name,
-                beforeRoute: params.beforeRoute,
-                afterRoute: params.afterRoute
+            const waitForComponent = async () => {
+                const component = await params.Component!();
+                return component;
             };
+            const Component = lazy(async () => ({ default: withRouter(await waitForComponent()) }));
             let alive = false;
             if (keepAlive !== undefined) alive = keepAlive;
             if (params.keepAlive !== undefined) alive = params.keepAlive;
+            data.map[params.path] = {
+                name: params.name,
+                beforeRoute: params.beforeRoute,
+                afterRoute: params.afterRoute,
+                alive,
+                selfMatched: [],
+                path: params.path,
+                switchRoute
+            };
             return (
                 <Route path='*' key={params.path}>
-                    <KeepAlive path={params.path} alive={alive}>
+                    <KeepAlive config={data.map[params.path]}>
                         <Component />
                     </KeepAlive>
                 </Route>
@@ -65,35 +73,42 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
         };
         return routers.reduce<JSX.Element[]>((acc, crr) => createPage(acc, crr), []);
     }, [routers]);
+
+    const notEnterHandler = (from: string, redirect?: boolean) => {
+        data.isReplace = true && !redirect;
+        (redirect ? history.push : history.replace)(from);
+        if (!redirect) setLoading(false);
+    };
     
-    data.historyChangeHandler = () => {
+    data.historyChangeHandler = async () => {
         setLoading(true);
-        const from = data.stack[data.stack.length - 1] || '';
-        // wait for redirect
+        data.matched = [];
         setTimeout(async () => {
-            const notEnterHandler = () => {
-                data.isReplace = true;
-                history.replace(from);
-                setLoading(false);
-            };
+
             const to = history.location.pathname;
-
+            
             const config = findMatchRoute(data.map, to);
-            if (!config) return history.push(redirect);
-
-            if ((await beforeEach?.(from, to)) === false) return notEnterHandler();
-            if ((await config?.beforeRoute?.(from, to)) === false) return notEnterHandler();
+            if (!config && redirect) return notEnterHandler(redirect, true);
+            if (!config && !redirect) {
+                setLoading(false);
+            }
+                
+            const from = data.stack[data.stack.length - 1] || '';
+            
+            if ((await beforeEach?.(from, to)) === false) return notEnterHandler(from);
+            if ((await config.beforeRoute?.(from, to)) === false) return notEnterHandler(from);
             data.stack.push(to);
             setLoading(false);
-            document.title = config?.name || data.originalTitle;
-            await config?.afterRoute?.(from, to);
+            document.title = config.name || data.originalTitle;
+    
+            await config.afterRoute?.(from, to);
             afterEach?.(from, to);
         });
     };
 
     useEffect(() => {
         data.historyChangeHandler?.();
-        history.listen(async () => {
+        history.listen(() => {
             if (!data.isReplace) {
                 data.historyChangeHandler?.();
             } else {
@@ -114,9 +129,9 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
     );
 });
 
-export const Routers: FC<IRouterProps> = (props) => (
+export const Routers: FC<IRouterProps> = memo((props) => (
     <Provider>
         <Router {...props} />
     </Provider>
-)
+));
 

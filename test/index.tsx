@@ -1,32 +1,10 @@
-import React, { FC, memo, useEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { render } from 'react-dom';
 import { Link, BrowserRouter } from 'react-router-dom';
-import { useActive, useDeActive } from '../src';
 import { Routers } from '../src/core/Router';
 import { LoadingPage } from './loading';
 
-const asyncTask = () => new Promise<void>(resolve => setTimeout(() => resolve(), 1000));
-
-const Sub: FC = () => {
-
-    const [count, setCount] = useState(0);
-
-    return (
-        <div>
-            <button onClick={() => setCount(count + 1)}>{count}</button>
-        </div>
-    )
-};
-
-
-let cache: any;
-const KeepAlive: FC = ({ children }) => {
-    return (
-        <div>
-            {children}
-        </div>
-    );
-};
+const asyncTask = () => new Promise<void>(resolve => setTimeout(() => resolve(), 2000));
 
 const App: FC = () => { 
 
@@ -37,7 +15,7 @@ const App: FC = () => {
     }, []);
 
     return (
-        <BrowserRouter basename='/test'>
+        <BrowserRouter>
             <Routers 
                 routers={[
                     // {
@@ -47,29 +25,10 @@ const App: FC = () => {
                     {
                         path: '/page1',  // test/page1
                         name: 'page1',
-                        Component: () => () => {
-                            const [show, setShow] = useState<boolean>(true);
-                            useActive(() => {
-                                console.log('active');
-                            });
-                            useDeActive(() => {
-                                console.log('deactive');
-                            });
-                            return (
-                                <>
-                                    page1
-                                    <Link to='/page2'>page2</Link>
-                                    <div>
-                                        <button onClick={() => setShow(!show)}>{show ? 'hide' : 'show'}</button>
-                                        {show && <Sub />}
-                                        {show && <KeepAlive><Sub /></KeepAlive>}
-                                    </div>
-                                </>
-                            )
-                        },
+                        Component: async () => (await import('./async')).AsyncComponent,
                         keepAlive: true,
                         afterRoute: (from, to) => {
-                            console.log(from ,to);
+                            console.log('afterRoute', from ,to);
                         }
                     },
                     {
@@ -88,12 +47,30 @@ const App: FC = () => {
                     }
                 ]}
                 beforeEach={async (from, to) => {
-                    await asyncTask();
+                    // await asyncTask();
                     console.log('beforeEach', from, to, data);
                 }}
                 redirect='/page1'
                 fallback={LoadingPage}
-            />
+            />            
+            {/* <Routers 
+                routers={[
+                    // {
+                    //     path: '/',
+                    //     Component: () => () => <Link to='/page1'>page1</Link>
+                    // },
+                    {
+                        path: '/page1',  // test/page1
+                        name: 'page4',
+                        Component: async () => (await import('./async')).AsyncComponent,
+                        keepAlive: true,
+                        afterRoute: (from, to) => {
+                            console.log('afterRoute', from ,to);
+                        }
+                    },
+                ]}
+                fallback={LoadingPage}
+            /> */}
         </BrowserRouter>
     );
 };

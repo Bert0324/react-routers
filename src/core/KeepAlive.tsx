@@ -1,38 +1,63 @@
 import React, { FC, memo, useEffect, useState } from 'react';
 import { matchPath, useHistory } from 'react-router';
 import { useRefContext } from '../context/context';
+import { IConfig } from '../type/type.d';
 import { filterMatchRoutes } from '../utils/utils';
 
-export const KeepAlive: FC<{ path: string; alive: boolean }> = memo(({ children, path, alive }) => {
-    
+export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) => {
     const history = useHistory();
     const [match, setMatch] = useState(false);
-
-    const { actives, deactives, stack } = useRefContext();
+    const [firstMatched, setFirstMatched] = useState(false);
+    const data = useRefContext();
 
     const checkMatch = () => {
-        setMatch(!!matchPath(history.location.pathname, {
-            path,
-            exact: true
-        }));
+        // after history change callback in router
+        setTimeout(() => {
+            let lastMatch = config.selfMatched[config.selfMatched.length - 1];
+            let currentMatch = !!matchPath(history.location.pathname, {
+                path: config.path,
+                exact: true
+            });
+            // if switchRoute, only match one route
+            if (config.switchRoute && data.matched.filter(Boolean).length !== 0) {
+                currentMatch = false;
+            }
+
+            setMatch(currentMatch);
+            config.selfMatched.push(currentMatch);
+            if (currentMatch && !firstMatched) {
+                setFirstMatched(true);
+            }
+
+            if (!firstMatched) {
+                if (currentMatch) {
+                    filterMatchRoutes(data.actives, config.path).forEach(effects => effects.forEach(effect => effect()));
+                } else if (lastMatch) {
+                    filterMatchRoutes(data.deactives, config.path).forEach(effects => effects.forEach(effect => effect()));
+                }
+            }
+        });
     };
+
     useEffect(() => {
         checkMatch();
         history.listen(() => checkMatch());
     }, []);
 
-    useEffect(() => {
-        if (alive) {
-            filterMatchRoutes(match ? actives : deactives, history.location.pathname).forEach(effects => effects.forEach(effect => effect()));
-        }
+    useEffect(() => () => {
+
     }, [match]);
     
     return (
         <>
-            {alive ? 
-            <div style={{ display: match ? '' : 'none' }}>
-                {children}
-            </div> : 
+            {config.alive ? 
+            <>
+                {firstMatched ?                 
+                <div style={{ display: match ? '' : 'none' }}>
+                    {children}
+                </div> : null}
+            </>
+            : 
             match ? children : null}
         </>
     );

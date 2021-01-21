@@ -1,4 +1,14 @@
-import { IBeforeRoute, IAfterRoute } from "../..";
+import { IBeforeRoute, IAfterRoute } from "../../index.d";
+
+interface IConfig {
+    name: string;
+    beforeRoute: IBeforeRoute;
+    afterRoute: IAfterRoute;
+    alive: boolean;
+    selfMatched: boolean[];
+    path: string;
+    switchRoute: boolean;
+}
 
 export interface IRefObj {
     historyChangeHandler?: () => void;
@@ -6,11 +16,7 @@ export interface IRefObj {
     isReplace: boolean;
     originalTitle: string;
     map: {
-        [path: string]: {
-            name: string;
-            beforeRoute: IBeforeRoute;
-            afterRoute: IAfterRoute;
-        }
+        [path: string]: IConfig;
     };
     actives: {
         [path: string]: (() => void)[];
@@ -18,4 +24,5 @@ export interface IRefObj {
     deactives: {
         [path: string]: (() => void)[];
     };
+    matched: boolean[];
 }
