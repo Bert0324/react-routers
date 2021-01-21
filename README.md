@@ -11,7 +11,7 @@ A React Component for quick configuring route.
 ## Features
 
 - Route Configuration like `react-router-config`
-- Route Guard like `Vue`
+- Route Guard and Keep Alive like `Vue`
 - Simple Lazy Load
 - Change `document.title` with Configuration
 - Tiny, zlib packed Only 1KB
@@ -20,8 +20,6 @@ A React Component for quick configuring route.
 ## Documents
 
 ```ts
-import { FC, CSSProperties, ComponentType } from 'react';
-
 export type IBeforeRoute = (from: string, to: string) => boolean | undefined | void | Promise<boolean | undefined | void>;
 export type IAfterRoute = (from: string, to: string) => void;
 
@@ -58,6 +56,12 @@ export interface IPageRouter {
      * - ahead of `afterEach`
      */
     afterRoute?: IAfterRoute;
+    /**
+     * maintains component state and avoids repeated re-rendering for the route
+     * - default is `false`
+     * - its priority is higher than `keepAlive` in props
+     */
+    keepAlive?: boolean;
 }
 
 /**
@@ -92,6 +96,16 @@ export interface IRouterProps {
      * - after any `afterRoute`
      */
     afterEach?: IAfterRoute;
+    /**
+     * do maintains component state and avoids repeated re-rendering for each route
+     * - default is `false`
+     */
+    keepAlive?: boolean;
+    /**
+     * switch
+     *  - default is `true`
+     */
+    switchRoute?: boolean;
 }
 ```
 
