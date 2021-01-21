@@ -36,6 +36,12 @@ export interface IPageRouter {
      * - ahead of `afterEach`
      */
     afterRoute?: IAfterRoute;
+    /**
+     * maintains component state and avoids repeated re-rendering for the route
+     * - default is `false`
+     * - its priority is higher than `keepAlive` in props
+     */
+    keepAlive?: boolean;
 }
 
 /**
@@ -70,6 +76,16 @@ export interface IRouterProps {
      * - after any `afterRoute`
      */
     afterEach?: IAfterRoute;
+    /**
+     * do maintains component state and avoids repeated re-rendering for each route
+     * - default is `false`
+     */
+    keepAlive?: boolean;
+    /**
+     * switch
+     *  - default is `true`
+     */
+    switchRoute?: boolean;
 }
 
 declare module 'react-routers' {
@@ -77,6 +93,14 @@ declare module 'react-routers' {
      * `react-routers`, see document or demo in: 
      * - <https://github.com/Bert0324/react-routers>
      */
-    const Routers: FC<IRouterProps>
-    export { Routers };
+    const Routers: FC<IRouterProps>;
+    /**
+     * triggered when first entering route and every time active it
+     */
+    const useActive: () => void;
+    /**
+     * triggered every time unmount route
+     */
+    const useDeActive: () => void;
+    export { Routers, useActive, useDeActive };
 }
