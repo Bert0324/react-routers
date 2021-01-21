@@ -13,7 +13,6 @@ export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) =>
     const checkMatch = () => {
         // after history change callback in router
         setTimeout(() => {
-            let lastMatch = config.selfMatched[config.selfMatched.length - 1];
             let currentMatch = !!matchPath(history.location.pathname, {
                 path: config.path,
                 exact: true
@@ -32,7 +31,7 @@ export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) =>
             if (!firstMatched) {
                 if (currentMatch) {
                     filterMatchRoutes(data.actives, config.path).forEach(effects => effects.forEach(effect => effect()));
-                } else if (lastMatch) {
+                } else if (config.selfMatched[config.selfMatched.length - 2]) {
                     filterMatchRoutes(data.deactives, config.path).forEach(effects => effects.forEach(effect => effect()));
                 }
             }

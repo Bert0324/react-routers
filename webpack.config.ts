@@ -124,7 +124,7 @@ export default {
                 terserOptions: {
                     compress: {
                         drop_debugger: isBuilding,
-                        drop_console: isBuilding,
+                        drop_console: false,
                     },
                     keep_classnames: false,
                     keep_fnames: false,

@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { render } from 'react-dom';
 import { Link, BrowserRouter } from 'react-router-dom';
+import { useParams } from '../src/context/hooks';
 import { Routers } from '../src/core/Router';
 import { LoadingPage } from './loading';
 
@@ -38,9 +39,13 @@ const App: FC = () => {
                             {
                                 path: '/:page',     // test/page2/page3
                                 name: 'page3',
-                                Component: async () => () => <>page3</>,
+                                Component: async () => () => {
+                                    const params = useParams();
+                                    console.log(params);
+                                    return <>page3</>
+                                },
                                 beforeRoute: (from, to) => {
-                                    return false;
+                                    // return false;
                                 },
                             }
                         ]

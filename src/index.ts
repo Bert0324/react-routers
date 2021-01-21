@@ -1,2 +1,2 @@
 export { Routers } from './core/Router';
-export { useActive, useDeActive } from './context/hooks';
+export { useActive, useDeActive, useParams } from './context/hooks';

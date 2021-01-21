@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useHistory } from "react-router";
 import { notExistPath } from "../utils/constants";
-import { findMatchPath } from "../utils/utils";
+import { findMatch, findMatchPath } from "../utils/utils";
 import { useRefContext } from "./context";
 
 export const useActive = (effect: () => void) => {
@@ -40,4 +40,10 @@ export const useDeActive = (effect: () => void) => {
            }
        };
     }, []);
+};
+
+export const useParams = <T = {}>() => {
+    const history = useHistory();
+    const { map } = useRefContext();
+    return findMatch<T>(map, history.location.pathname)?.params;
 };

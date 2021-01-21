@@ -102,5 +102,9 @@ declare module 'react-routers' {
      * triggered every time unmount route
      */
     const useDeActive: () => void;
-    export { Routers, useActive, useDeActive };
+    /**
+     * `useParams` like <https://reactrouter.com/core/api/Hooks/useparams>
+     */
+    const useParams: <T = {}>() => T;
+    export { Routers, useActive, useDeActive, useParams };
 }
