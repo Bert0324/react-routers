@@ -79,11 +79,6 @@ export interface IPageRouter {
      * transition animation
      */
     transition?: ITransition;
-    /**
-     * loading delay
-     * - default is `500`ms
-     */
-    delay?: number;
 }
 
 /**
@@ -132,6 +127,11 @@ export interface IRouterProps {
      * transition animation
      */
     transition?: ITransition;
+    /**
+     * loading delay
+     * - default is `500`ms
+     */
+    delay?: number;
 }
 
 declare module 'react-routers' {
