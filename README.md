@@ -165,7 +165,7 @@ useActive(() => {
 
 #### `useParams`
 
-A wrapped function of [`useParams`](https://reactrouter.com/web/api/Hooks/useroutematch). Notice, if you use `useParams` of `react-router` in a `react-routers` controlled component, you can't get correct match, as `react-router` don't the configuration configured in `react-routers`.
+A wrapped function of [`useParams`](https://reactrouter.com/web/api/Hooks/useroutematch). Notice, if you use `useParams` of `react-router` in a `react-routers` controlled component, you can't get correct match, as `react-router` don't have the configuration configured in `react-routers`.
 
 ```ts
 import { useParams } from 'react-routers';
