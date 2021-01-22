@@ -9,6 +9,9 @@ interface IConfig {
     path: string;
     switchRoute: boolean;
     transition?: ITransition;
+    delay: number;
+    haveBeforeEach: boolean;
+    ready: boolean;
 }
 
 export interface IRefObj {
@@ -20,10 +23,14 @@ export interface IRefObj {
         [path: string]: IConfig;
     };
     actives: {
-        [path: string]: (() => void)[];
+        [path: string]: {
+            [id: string]: ActiveHook
+        };
     };
     deactives: {
-        [path: string]: (() => void)[];
+        [path: string]: {
+            [id: string]: ActiveHook;
+        }
     };
     matched: boolean[];
 }
@@ -34,7 +41,14 @@ export type ITransition = {
     match: CSSProperties;
     notMatch: CSSProperties;
     trans: CSSProperties;
+    /**
+     * 
+     * - default is `500`ms
+     */
+    delay?: number;
 };
+export type EffectHook = () => void;
+export type ActiveHook = () => EffectHook | void | undefined;
 
 /**
  * Router Configuration
@@ -129,7 +143,7 @@ export interface IRouterProps {
     transition?: ITransition;
     /**
      * loading delay
-     * - default is `500`ms
+     * - default is `100`ms
      */
     delay?: number;
 }
@@ -143,11 +157,7 @@ declare module 'react-routers' {
     /**
      * triggered when first entering route and every time active it
      */
-    const useActive: (effect: () => void) => void;
-    /**
-     * triggered every time unmount route
-     */
-    const useDeActive: (effect: () => void) => void;
+    const useActive: (effect: ActiveHook) => void;
     /**
      * `useParams` like <https://reactrouter.com/core/api/Hooks/useparams>
      */
@@ -156,10 +166,26 @@ declare module 'react-routers' {
      * get current configuration
      */
     const useRefContext: () => IRefObj | null;
-    export { Routers, useActive, useDeActive, useParams, useRefContext };
-}
-
-declare module '*.module.less' {
-    const styles: { readonly [key: string]: string };
-    export default styles;
+    const LeftFade: ITransition;
+    const RightFade: ITransition;
+    const TopFade: ITransition;
+    const BottomFade: ITransition;
+    const LeftSlide: ITransition;
+    const RightSlide: ITransition;
+    const TopSlide: ITransition;
+    const BottomSlide: ITransition;
+    export { 
+        Routers, 
+        useActive, 
+        useParams, 
+        useRefContext,
+        LeftFade,
+        RightFade,
+        TopFade,
+        BottomFade,
+        LeftSlide,
+        RightSlide,
+        TopSlide,
+        BottomSlide
+    };
 }

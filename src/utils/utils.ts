@@ -1,7 +1,7 @@
 import { match, matchPath } from "react-router";
 import { notExistPath } from "./constants";
 
-const getOptions = path => ({
+const getOptions = (path: string) => ({
     path,
     exact: true
 });
@@ -29,4 +29,17 @@ export const findMatch = <T = {}>(map: { [key: string]: any }, path: string) => 
         }
         return acc;
     }, undefined as unknown as match<T>);
+};
+
+export const setTimeoutTask = <T>(task: () => T) => new Promise<T>(resolve => setTimeout(() => {
+    resolve(task());
+}, 100));
+
+export const getWithinTime = async <T>(task: () => T) => {
+    const timeout = 10000;
+    const start = Number(new Date());
+    while (Number(new Date()) - start < timeout) {
+        const res = await setTimeoutTask(task);
+        if (res) return res;
+    }
 };
