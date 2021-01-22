@@ -1,8 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { render } from 'react-dom';
 import { Link, BrowserRouter } from 'react-router-dom';
-import { useParams } from '../src/context/hooks';
-import { Routers } from '../src/core/Router';
+import { Routers, useParams } from '../src';
 import { LoadingPage } from './loading';
 
 const asyncTask = () => new Promise<void>(resolve => setTimeout(() => resolve(), 2000));
@@ -40,12 +39,12 @@ const App: FC = () => {
                                 path: '/:page',     // test/page2/page3
                                 name: 'page3',
                                 Component: async () => () => {
-                                    const params = useParams();
-                                    console.log(params);
+                                    // const params = useParams();
+                                    // console.log(params);
                                     return <>page3</>
                                 },
                                 beforeRoute: (from, to) => {
-                                    // return false;
+                                    return false;
                                 },
                             }
                         ]
@@ -58,7 +57,7 @@ const App: FC = () => {
                 redirect='/page1'
                 fallback={LoadingPage}
             />            
-            <Routers 
+            {/* <Routers 
                 routers={[
                     // {
                     //     path: '/',
@@ -75,7 +74,7 @@ const App: FC = () => {
                     },
                 ]}
                 fallback={LoadingPage}
-            />
+            /> */}
         </BrowserRouter>
     );
 };

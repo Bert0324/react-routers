@@ -8,6 +8,7 @@ export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) =>
     const history = useHistory();
     const [match, setMatch] = useState(false);
     const [firstMatched, setFirstMatched] = useState(false);
+    const [delayMatch, setDelayMatch] = useState(false);
     const data = useRefContext()!;
 
     const checkMatch = () => {
@@ -47,17 +48,35 @@ export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) =>
         history.listen(() => checkMatch());
     }, []);
 
+    useEffect(() => {
+        setTimeout(() => {
+            setDelayMatch(match);
+        }, 500);
+    }, [match]);
+
+    const transitionStyle = {
+        ...config.transition?.trans,
+        ...(match ? config.transition?.match : config.transition?.notMatch)
+    };
+
     return (
         <>
             {config.alive ? 
                 <>
-                    {firstMatched ?                 
-                        <div style={{ display: match ? '' : 'none' }}>
+                    {firstMatched ?    
+                        <div 
+                            style={{ display: (config.transition ? delayMatch : match) ? '' : 'none', ...transitionStyle }}
+                        >
                             {children}
-                        </div> : null}
+                        </div>      
+                        : null}
                 </>
             : 
-            match ? children : null}
+            <div 
+                style={transitionStyle}
+            >
+                {(config.transition ? delayMatch : match) ? children : null}
+            </div>}
         </>
     );
 }, (prev, next) => JSON.stringify(prev.config) === JSON.stringify(next.config));

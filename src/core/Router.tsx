@@ -1,5 +1,6 @@
-import React, { lazy, Suspense, FC, memo, useState, useMemo, useEffect } from 'react';
+import React, { lazy, Suspense, FC, memo, useState, useMemo, useEffect, useCallback } from 'react';
 import { Route, withRouter, useHistory } from 'react-router-dom';
+import { throttle } from 'lodash-es';
 import { IPageRouter, IRouterProps } from '../..';
 import { Provider, useRefContext } from '../context/context';
 import { KeepAlive } from './KeepAlive';
@@ -8,10 +9,14 @@ import { findMatchRoute } from '../utils/utils';
 /**
  * router
  */
-const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach, afterEach, style, keepAlive, switchRoute = true }) => {
+const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach, afterEach, style, keepAlive, switchRoute = true, transition, delay }) => {
     const history = useHistory();
-    const [loading, setLoading] = useState(true);
+    const [loading, _setLoading] = useState(true);
     const data = useRefContext()!;
+
+    const setLoading = useCallback(throttle((_loading: boolean) => {
+        _setLoading(_loading);
+    }, (delay || 500), { leading: false, trailing: true }), [_setLoading]);
 
     const Loading = useMemo(() => {
         const Fallback = fallback;
@@ -47,7 +52,8 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
                 alive,
                 selfMatched: [],
                 path: params.path,
-                switchRoute
+                switchRoute,
+                transition: params.transition || transition
             };
             return (
                 <Route path='*' key={params.path}>
@@ -81,6 +87,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
     };
     
     data.historyChangeHandler = async () => {
+        // don't show loading with an interval
         setLoading(true);
         data.matched = [];
         setTimeout(async () => {

@@ -8,6 +8,7 @@ interface IConfig {
     selfMatched: boolean[];
     path: string;
     switchRoute: boolean;
+    transition?: ITransition;
 }
 
 export interface IRefObj {
@@ -29,6 +30,11 @@ export interface IRefObj {
 
 export type IBeforeRoute = (from: string, to: string) => boolean | undefined | void | Promise<boolean | undefined | void>;
 export type IAfterRoute = (from: string, to: string) => void;
+export type ITransition = {
+    match: CSSProperties;
+    notMatch: CSSProperties;
+    trans: CSSProperties;
+};
 
 /**
  * Router Configuration
@@ -69,6 +75,15 @@ export interface IPageRouter {
      * - its priority is higher than `keepAlive` in props
      */
     keepAlive?: boolean;
+    /**
+     * transition animation
+     */
+    transition?: ITransition;
+    /**
+     * loading delay
+     * - default is `500`ms
+     */
+    delay?: number;
 }
 
 /**
@@ -113,6 +128,10 @@ export interface IRouterProps {
      *  - default is `true`
      */
     switchRoute?: boolean;
+    /**
+     * transition animation
+     */
+    transition?: ITransition;
 }
 
 declare module 'react-routers' {
@@ -124,11 +143,11 @@ declare module 'react-routers' {
     /**
      * triggered when first entering route and every time active it
      */
-    const useActive: () => void;
+    const useActive: (effect: () => void) => void;
     /**
      * triggered every time unmount route
      */
-    const useDeActive: () => void;
+    const useDeActive: (effect: () => void) => void;
     /**
      * `useParams` like <https://reactrouter.com/core/api/Hooks/useparams>
      */
@@ -138,4 +157,9 @@ declare module 'react-routers' {
      */
     const useRefContext: () => IRefObj | null;
     export { Routers, useActive, useDeActive, useParams, useRefContext };
+}
+
+declare module '*.module.less' {
+    const styles: { readonly [key: string]: string };
+    export default styles;
 }

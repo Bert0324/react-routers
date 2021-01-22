@@ -12,8 +12,6 @@ export const useActive = (effect: () => void) => {
     const data = useRefContext()!;
     const history = useHistory();
     useEffect(() => {
-        // // eslint-disable-next-line no-debugger
-        // debugger;
         const key = findMatchPath(data.map, history.location.pathname);
         if (key !== notExistPath) {
             if (!data.actives[key]) {
