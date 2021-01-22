@@ -9,9 +9,11 @@ import { useRefContext } from "./context";
  * @param effect 
  */
 export const useActive = (effect: () => void) => {
-    const data = useRefContext();
+    const data = useRefContext()!;
     const history = useHistory();
     useEffect(() => {
+        // // eslint-disable-next-line no-debugger
+        // debugger;
         const key = findMatchPath(data.map, history.location.pathname);
         if (key !== notExistPath) {
             if (!data.actives[key]) {
@@ -32,7 +34,7 @@ export const useActive = (effect: () => void) => {
  * @param effect 
  */
 export const useDeActive = (effect: () => void) => {
-    const { deactives, map } = useRefContext();
+    const { deactives, map } = useRefContext()!;
     const history = useHistory();
     useEffect(() => {
        const key = findMatchPath(map, history.location.pathname);
@@ -52,6 +54,6 @@ export const useDeActive = (effect: () => void) => {
 
 export const useParams = <T = {}>() => {
     const history = useHistory();
-    const { map } = useRefContext();
+    const { map } = useRefContext()!;
     return findMatch<T>(map, history.location.pathname)?.params;
 };

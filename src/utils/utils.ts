@@ -28,5 +28,5 @@ export const findMatch = <T = {}>(map: { [key: string]: any }, path: string) => 
             acc = match;
         }
         return acc;
-    }, undefined as match<T>);
+    }, undefined as unknown as match<T>);
 };
