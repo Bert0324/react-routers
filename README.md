@@ -1,6 +1,6 @@
 # React Routers
 
-<p align="center"><img src="https://bert-images.oss-cn-shanghai.aliyuncs.com/images/Facebook%20Post%20940x788%20px%20(2).jpeg" alt="fre logo" width="130"></p>
+<p align="center"><img src="./assets/icon.jpeg" alt="fre logo" width="130"></p>
 <h1 align="center">React Routers</h1>
 <p align="center">🌠A React Component for quick configuring route</p>
 <p align="center">
