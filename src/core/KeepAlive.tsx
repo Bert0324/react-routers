@@ -1,8 +1,10 @@
 import React, { FC, memo, useEffect, useState } from 'react';
 import { matchPath, useHistory } from 'react-router';
+import { CSSTransition } from 'react-transition-group';
 import { useRefContext } from '../context/context';
 import { IConfig } from '../../index.d';
 import { filterMatchRoutes } from '../utils/utils';
+import './index.less';
 
 export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) => {
     const history = useHistory();
@@ -51,10 +53,17 @@ export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) =>
         <>
             {config.alive ? 
                 <>
-                    {firstMatched ?                 
-                        <div style={{ display: match ? '' : 'none' }}>
+                    {firstMatched ?    
+                    <CSSTransition
+                        in={match}
+                        timeout={200}
+                        classNames='my-node'
+                    >
+                         <div style={{ display: match ? '' : 'none' }}>
                             {children}
-                        </div> : null}
+                        </div>
+                    </CSSTransition>             
+                        : null}
                 </>
             : 
             match ? children : null}

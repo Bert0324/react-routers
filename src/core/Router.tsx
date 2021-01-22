@@ -81,7 +81,8 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
     };
     
     data.historyChangeHandler = async () => {
-        setLoading(true);
+        // don't show loading with an interval
+        setTimeout(() => setLoading(true), 500);
         data.matched = [];
         setTimeout(async () => {
 

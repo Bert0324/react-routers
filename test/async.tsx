@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useActive, useDeActive } from '../src';
+import { useActive, useDeActive } from '../src/index';
 
 const Sub: FC = () => {
 
@@ -22,6 +22,7 @@ export const AsyncComponent: FC = () => {
     useDeActive(() => {
         console.log('page1 deactive', data);
     });
+
     return (
         <>
             page1

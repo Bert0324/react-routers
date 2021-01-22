@@ -124,11 +124,11 @@ declare module 'react-routers' {
     /**
      * triggered when first entering route and every time active it
      */
-    const useActive: () => void;
+    const useActive: (effect: () => void) => void;
     /**
      * triggered every time unmount route
      */
-    const useDeActive: () => void;
+    const useDeActive: (effect: () => void) => void;
     /**
      * `useParams` like <https://reactrouter.com/core/api/Hooks/useparams>
      */
