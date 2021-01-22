@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, FC, memo, useState, useMemo, useEffect, useCallback } from 'react';
 import { Route, withRouter, useHistory } from 'react-router-dom';
 import { throttle } from 'lodash-es';
-import { IPageRouter, IRouterProps } from '../..';
+import { IPageRouter, IRouterProps } from '../../index.d';
 import { Provider, useRefContext } from '../context/context';
 import { KeepAlive } from './KeepAlive';
 import { findMatchRoute } from '../utils/utils';
@@ -14,9 +14,11 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
     const [loading, _setLoading] = useState(true);
     const data = useRefContext()!;
 
+    const delayLoad = delay || 100;
+
     const setLoading = useCallback(throttle((_loading: boolean) => {
         _setLoading(_loading);
-    }, (delay || 500), { leading: false, trailing: true }), [_setLoading]);
+    }, delayLoad, { leading: false, trailing: true }), [_setLoading]);
 
     const Loading = useMemo(() => {
         const Fallback = fallback;
@@ -37,14 +39,10 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
          */
         const Page = (params: IPageRouter) => {
             if (!params.Component) return false;
-            const waitForComponent = async () => {
-                const component = await params.Component!();
-                return component;
-            };
-            const Component = lazy(async () => ({ default: withRouter(await waitForComponent()) }));
             let alive = false;
             if (keepAlive !== undefined) alive = keepAlive;
             if (params.keepAlive !== undefined) alive = params.keepAlive;
+
             data.map[params.path] = {
                 name: params.name || '',
                 beforeRoute: params.beforeRoute,
@@ -53,11 +51,23 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
                 selfMatched: [],
                 path: params.path,
                 switchRoute,
-                transition: params.transition || transition
+                transition: params.transition || transition,
+                delay: delayLoad,
+                haveBeforeEach: !!beforeEach,
+                ready: false
             };
+
+            const waitForComponent = async () => {
+                const asyncTask = () => new Promise<void>(resolve => setTimeout(() => resolve(), 2000));
+                await asyncTask();
+                const component = await params.Component!();
+                setTimeout(() => data.map[params.path].ready = true);
+                return component;
+            };
+            const Component = lazy(async () => ({ default: withRouter(await waitForComponent()) }));
             return (
                 <Route path='*' key={params.path}>
-                    <KeepAlive config={data.map[params.path]}>
+                    <KeepAlive path={params.path}>
                         <Component />
                     </KeepAlive>
                 </Route>
@@ -78,7 +88,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
             return acc;
         };
         return routers.reduce<JSX.Element[]>((acc, crr) => createPage(acc, crr), []);
-    }, [JSON.stringify({ keepAlive, routers, switchRoute })]);
+    }, [keepAlive, routers, switchRoute]);
 
     const notEnterHandler = (from: string, redirect?: boolean) => {
         data.isReplace = true && !redirect;

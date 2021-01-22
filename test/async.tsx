@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useActive, useDeActive } from '../src/index';
+import { useActive, useRefContext } from '../src/index';
 
 const Sub: FC = () => {
 
@@ -18,19 +18,22 @@ export const AsyncComponent: FC = () => {
     const data = Number(new Date());
     useActive(() => {
         console.log('page1 active', data);
-    });
-    useDeActive(() => {
-        console.log('page1 deactive', data);
+        return () => {
+            console.log('page1 deactive', data);
+        }
     });
 
+    const ref = useRefContext();
+    console.log(ref)
+
     return (
-        <>
+        <div style={{ height: '80vh', width: '80vw', backgroundColor: 'yellow' }}>
             page1
             <Link to='/page2'>page2</Link>
             <div>
                 <button onClick={() => setShow(!show)}>{show ? 'hide' : 'show'}</button>
                 {show && <Sub />}
             </div>
-        </>
+        </div>
     )
 }

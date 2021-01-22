@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { render } from 'react-dom';
 import { Link, BrowserRouter } from 'react-router-dom';
-import { Routers, useParams } from '../src';
+import { TopSlide, Routers, useParams, useRefContext } from '../src';
 import { LoadingPage } from './loading';
 
 const asyncTask = () => new Promise<void>(resolve => setTimeout(() => resolve(), 2000));
@@ -17,6 +17,7 @@ const App: FC = () => {
     return (
         <BrowserRouter>
             <Routers 
+                transition={TopSlide}
                 routers={[
                     // {
                     //     path: '/',
@@ -33,7 +34,7 @@ const App: FC = () => {
                     },
                     {
                         path: '/page2',  // test/page2
-                        Component: async () => () => <Link to='/page2/page3'>page2</Link>,
+                        Component: async () => () => <div style={{ height: '80vh', width: '80vw', backgroundColor: 'blue' }}><Link to='/page2/page3'>page2</Link></div>,
                         children: [
                             {
                                 path: '/:page',     // test/page2/page3
@@ -51,7 +52,7 @@ const App: FC = () => {
                     }
                 ]}
                 beforeEach={async (from, to) => {
-                    await asyncTask();
+                    // await asyncTask();
                     console.log('beforeEach', from, to, data);
                 }}
                 redirect='/page1'

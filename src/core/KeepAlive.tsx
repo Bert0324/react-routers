@@ -1,19 +1,20 @@
 import React, { FC, memo, useEffect, useState } from 'react';
 import { matchPath, useHistory } from 'react-router';
 import { useRefContext } from '../context/context';
-import { IConfig } from '../../index.d';
-import { filterMatchRoutes } from '../utils/utils';
+import { EffectHook } from '../../index.d';
+import { filterMatchRoutes, getWithinTime } from '../utils/utils';
 
-export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) => {
+export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
     const history = useHistory();
     const [match, setMatch] = useState(false);
     const [firstMatched, setFirstMatched] = useState(false);
     const [delayMatch, setDelayMatch] = useState(false);
     const data = useRefContext()!;
+    const config = data.map[path];
 
     const checkMatch = () => {
         // after history change callback in router
-        setTimeout(() => {
+        setTimeout(async () => {
             let currentMatch = !!matchPath(history.location.pathname, {
                 path: config.path,
                 exact: true
@@ -32,15 +33,35 @@ export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) =>
             if (currentMatch && !firstMatched) {
                 setFirstMatched(true);
             }
-    
-            if (!firstMatched) {
+
+            // wait until async component is ready
+            const ready = config?.ready || await getWithinTime(() => config?.ready);
+
+            if (ready) {
+                // call active hooks
                 if (currentMatch) {
-                    filterMatchRoutes(data.actives, config.path).forEach(effects => effects.forEach(effect => effect()));
+                    let collectDeactives = false;
+                    if (!data.deactives[config.path]) {
+                        collectDeactives = true;
+                        data.deactives[config.path] = {};
+                    }
+                    filterMatchRoutes(data.actives, config.path).forEach(
+                        effects => Object.keys(effects).forEach(key => {
+                            const deactive = effects[key]?.();
+                            if (collectDeactives && Object.prototype.toString.call(deactive) === '[object Function]') {
+                                data.deactives[config.path][key] = deactive as EffectHook;
+                            }
+                        })
+                    );
                 } else if (lastMatched) {
-                    filterMatchRoutes(data.deactives, config.path).forEach(effects => effects.forEach(effect => effect()));
+                    filterMatchRoutes(data.deactives, config.path).forEach(
+                        effects => Object.keys(effects).forEach(
+                            key => data.deactives[config.path]?.[key]?.()
+                        )
+                    );
                 }
             }
-        });
+        }, (config.haveBeforeEach || !!config.beforeRoute) ? config.delay : 0);
     };
 
     useEffect(() => {
@@ -49,9 +70,7 @@ export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) =>
     }, []);
 
     useEffect(() => {
-        setTimeout(() => {
-            setDelayMatch(match);
-        }, 500);
+        setTimeout(() => setDelayMatch(match), config.transition?.delay || 500);
     }, [match]);
 
     const transitionStyle = {
@@ -59,24 +78,24 @@ export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) =>
         ...(match ? config.transition?.match : config.transition?.notMatch)
     };
 
+    const actualDisplay = config.transition ? delayMatch : match;
+
     return (
         <>
             {config.alive ? 
                 <>
                     {firstMatched ?    
                         <div 
-                            style={{ display: (config.transition ? delayMatch : match) ? '' : 'none', ...transitionStyle }}
+                            style={{ display: actualDisplay ? '' : 'none', ...transitionStyle }}
                         >
                             {children}
                         </div>      
                         : null}
                 </>
             : 
-            <div 
-                style={transitionStyle}
-            >
-                {(config.transition ? delayMatch : match) ? children : null}
+            <div style={transitionStyle}>
+                {actualDisplay ? children : null}
             </div>}
         </>
     );
-}, (prev, next) => JSON.stringify(prev.config) === JSON.stringify(next.config));
+}, (prev, next) => prev.path === next.path);
