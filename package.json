@@ -1,6 +1,6 @@
 {
   "name": "react-routers",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "router component",
   "author": "yuchen.huang <'yuchenhuang0324@gmail.com'>",
   "main": "dist/main.min.js",
@@ -75,6 +75,7 @@
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "react-routers": "^2.0.2",
     "style-loader": "^2.0.0",
     "thread-loader": "^3.0.1",
     "ts-loader": "^8.0.12",

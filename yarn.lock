@@ -8132,6 +8132,13 @@ react-router@5.2.0, react-router@^5.2.0:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
+react-routers@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-routers/-/react-routers-2.0.2.tgz#7ac6f616c7101ae420b37740976ba185e0cbd55a"
+  integrity sha512-4zSKHT9KDTtXrlloo9X1OGZ3KwJdviiYJVCfvEc8S+xkMBqcjOwI0UTbS7WmNh5ZpdlR+ZELYTXXQPsGlrh5WQ==
+  dependencies:
+    lodash-es "^4.17.20"
+
 react@^17.0.1:
   version "17.0.1"
   resolved "https://registry.yarnpkg.com/react/-/react-17.0.1.tgz#6e0600416bd57574e3f86d92edba3d9008726127"
