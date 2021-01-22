@@ -1,5 +1,32 @@
 import { FC, CSSProperties, ComponentType } from 'react';
 
+interface IConfig {
+    name: string;
+    beforeRoute?: IBeforeRoute;
+    afterRoute?: IAfterRoute;
+    alive: boolean;
+    selfMatched: boolean[];
+    path: string;
+    switchRoute: boolean;
+}
+
+export interface IRefObj {
+    historyChangeHandler?: () => void;
+    stack: string[];
+    isReplace: boolean;
+    originalTitle: string;
+    map: {
+        [path: string]: IConfig;
+    };
+    actives: {
+        [path: string]: (() => void)[];
+    };
+    deactives: {
+        [path: string]: (() => void)[];
+    };
+    matched: boolean[];
+}
+
 export type IBeforeRoute = (from: string, to: string) => boolean | undefined | void | Promise<boolean | undefined | void>;
 export type IAfterRoute = (from: string, to: string) => void;
 
@@ -102,5 +129,13 @@ declare module 'react-routers' {
      * triggered every time unmount route
      */
     const useDeActive: () => void;
-    export { Routers, useActive, useDeActive };
+    /**
+     * `useParams` like <https://reactrouter.com/core/api/Hooks/useparams>
+     */
+    const useParams: <T = {}>() => T;
+    /**
+     * get current configuration
+     */
+    const useRefContext: () => IRefObj | null;
+    export { Routers, useActive, useDeActive, useParams, useRefContext };
 }

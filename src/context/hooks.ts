@@ -1,13 +1,19 @@
 import { useEffect } from "react";
 import { useHistory } from "react-router";
 import { notExistPath } from "../utils/constants";
-import { findMatchPath } from "../utils/utils";
+import { findMatch, findMatchPath } from "../utils/utils";
 import { useRefContext } from "./context";
 
+/**
+ * push active callback to ref
+ * @param effect 
+ */
 export const useActive = (effect: () => void) => {
-    const data = useRefContext();
+    const data = useRefContext()!;
     const history = useHistory();
     useEffect(() => {
+        // // eslint-disable-next-line no-debugger
+        // debugger;
         const key = findMatchPath(data.map, history.location.pathname);
         if (key !== notExistPath) {
             if (!data.actives[key]) {
@@ -23,8 +29,12 @@ export const useActive = (effect: () => void) => {
     }, []);
 };
 
+/**
+ * push deactive callback to ref
+ * @param effect 
+ */
 export const useDeActive = (effect: () => void) => {
-    const { deactives, map } = useRefContext();
+    const { deactives, map } = useRefContext()!;
     const history = useHistory();
     useEffect(() => {
        const key = findMatchPath(map, history.location.pathname);
@@ -40,4 +50,10 @@ export const useDeActive = (effect: () => void) => {
            }
        };
     }, []);
+};
+
+export const useParams = <T = {}>() => {
+    const history = useHistory();
+    const { map } = useRefContext()!;
+    return findMatch<T>(map, history.location.pathname)?.params;
 };

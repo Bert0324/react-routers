@@ -1,5 +1,5 @@
 import React, { createContext, FC, memo, useContext, useMemo } from 'react';
-import { IRefObj } from '../type/type';
+import { IRefObj } from '../../index.d';
 
 const createStore = (): IRefObj => ({
     stack: [],

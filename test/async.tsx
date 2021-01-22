@@ -15,11 +15,12 @@ const Sub: FC = () => {
 
 export const AsyncComponent: FC = () => {
     const [show, setShow] = useState<boolean>(true);
+    const data = Number(new Date());
     useActive(() => {
-        console.log('page1 active');
+        console.log('page1 active', data);
     });
     useDeActive(() => {
-        console.log('page1 deactive');
+        console.log('page1 deactive', data);
     });
     return (
         <>

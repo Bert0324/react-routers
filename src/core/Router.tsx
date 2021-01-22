@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, FC, memo, useState, useMemo, useEffect } from 'react';
 import { Route, withRouter, useHistory } from 'react-router-dom';
-import { IPageRouter, IRouterProps } from '../../index.d';
+import { IPageRouter, IRouterProps } from '../..';
 import { Provider, useRefContext } from '../context/context';
 import { KeepAlive } from './KeepAlive';
 import { findMatchRoute } from '../utils/utils';
@@ -11,7 +11,7 @@ import { findMatchRoute } from '../utils/utils';
 const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach, afterEach, style, keepAlive, switchRoute = true }) => {
     const history = useHistory();
     const [loading, setLoading] = useState(true);
-    const data = useRefContext();
+    const data = useRefContext()!;
 
     const Loading = useMemo(() => {
         const Fallback = fallback;
@@ -22,7 +22,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
                 to={history.location.pathname} 
             />
         );
-    }, [fallback]);
+    }, [data.stack, fallback, history.location.pathname]);
 
     const paths = useMemo(() => {
         data.map = {};
@@ -41,7 +41,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
             if (keepAlive !== undefined) alive = keepAlive;
             if (params.keepAlive !== undefined) alive = params.keepAlive;
             data.map[params.path] = {
-                name: params.name,
+                name: params.name || '',
                 beforeRoute: params.beforeRoute,
                 afterRoute: params.afterRoute,
                 alive,
@@ -72,7 +72,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
             return acc;
         };
         return routers.reduce<JSX.Element[]>((acc, crr) => createPage(acc, crr), []);
-    }, [routers]);
+    }, [JSON.stringify({ keepAlive, routers, switchRoute })]);
 
     const notEnterHandler = (from: string, redirect?: boolean) => {
         data.isReplace = true && !redirect;
@@ -90,7 +90,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
             const config = findMatchRoute(data.map, to);
             if (!config && redirect) return notEnterHandler(redirect, true);
             if (!config && !redirect) {
-                setLoading(false);
+                return setLoading(false);
             }
                 
             const from = data.stack[data.stack.length - 1] || '';
@@ -115,7 +115,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
                 data.isReplace = false;
             }
         });
-    }, []);
+    }, [data, history]);
 
     return (
         <div style={style}>
