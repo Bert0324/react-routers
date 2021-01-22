@@ -1,6 +1,6 @@
 {
   "name": "react-routers",
-  "version": "1.0.13",
+  "version": "1.0.17",
   "description": "router component",
   "author": "yuchen.huang <'yuchenhuang0324@gmail.com'>",
   "main": "dist/main.min.js",
@@ -46,6 +46,7 @@
     "@types/clean-webpack-plugin": "^0.1.3",
     "@types/html-webpack-plugin": "^3.2.4",
     "@types/loader-utils": "^2.0.1",
+    "@types/lodash-es": "^4.17.4",
     "@types/mini-css-extract-plugin": "^1.2.2",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
@@ -87,6 +88,7 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
+    "lodash-es": "^4.17.20",
     "react-transition-group": "^4.4.1"
   }
 }

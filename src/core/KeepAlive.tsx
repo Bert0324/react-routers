@@ -1,15 +1,14 @@
 import React, { FC, memo, useEffect, useState } from 'react';
 import { matchPath, useHistory } from 'react-router';
-import { CSSTransition } from 'react-transition-group';
 import { useRefContext } from '../context/context';
 import { IConfig } from '../../index.d';
 import { filterMatchRoutes } from '../utils/utils';
-import './index.less';
 
 export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) => {
     const history = useHistory();
     const [match, setMatch] = useState(false);
     const [firstMatched, setFirstMatched] = useState(false);
+    const [delayMatch, setDelayMatch] = useState(false);
     const data = useRefContext()!;
 
     const checkMatch = () => {
@@ -49,24 +48,35 @@ export const KeepAlive: FC<{ config: IConfig }> = memo(({ children, config }) =>
         history.listen(() => checkMatch());
     }, []);
 
+    useEffect(() => {
+        setTimeout(() => {
+            setDelayMatch(match);
+        }, 500);
+    }, [match]);
+
+    const transitionStyle = {
+        ...config.transition?.trans,
+        ...(match ? config.transition?.match : config.transition?.notMatch)
+    };
+
     return (
         <>
             {config.alive ? 
                 <>
                     {firstMatched ?    
-                    <CSSTransition
-                        in={match}
-                        timeout={200}
-                        classNames='my-node'
-                    >
-                         <div style={{ display: match ? '' : 'none' }}>
+                        <div 
+                            style={{ display: (config.transition ? delayMatch : match) ? '' : 'none', ...transitionStyle }}
+                        >
                             {children}
-                        </div>
-                    </CSSTransition>             
+                        </div>      
                         : null}
                 </>
             : 
-            match ? children : null}
+            <div 
+                style={transitionStyle}
+            >
+                {(config.transition ? delayMatch : match) ? children : null}
+            </div>}
         </>
     );
 }, (prev, next) => JSON.stringify(prev.config) === JSON.stringify(next.config));
