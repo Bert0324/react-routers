@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { render } from 'react-dom';
 import { Link, BrowserRouter } from 'react-router-dom';
-import { TopSlide, Routers, useParams, useRefContext } from 'react-routers';
+import { LeftFade, Routers, useParams, useRefContext } from 'react-routers';
 import { LoadingPage } from './loading';
 
 const asyncTask = () => new Promise<void>(resolve => setTimeout(() => resolve(), 2000));
@@ -17,7 +17,7 @@ const App: FC = () => {
     return (
         <BrowserRouter>
             <Routers 
-                transition={TopSlide}
+                transition={LeftFade}
                 routers={[
                     // {
                     //     path: '/',

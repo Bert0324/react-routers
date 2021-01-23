@@ -166,6 +166,10 @@ or directly use embedded animation objects.
 
 The hook triggered when the route match the component's route in configuration.
 
+WHEN DO YOU NEED IT?
+
+- If a component is set as `keepAlive`, and you want to trigger something when the component is activated.
+
 ```ts
 import { useActive } from 'react-routers';
 
@@ -179,7 +183,9 @@ useActive(() => {
 
 #### `useParams`
 
-A wrapped function of [`useParams`](https://reactrouter.com/web/api/Hooks/useroutematch). Notice, if you use `useParams` of `react-router` in a `react-routers` controlled component, you can't get correct match, as `react-router` don't have the configuration configured in `react-routers`.
+A wrapped function of [`useParams`](https://reactrouter.com/web/api/Hooks/useroutematch).
+
+As `react-router` don't have the configuration configured in `react-routers`, if you want to get params in route, you should use this hook.
 
 ```ts
 import { useParams } from 'react-routers';
@@ -190,7 +196,7 @@ const { slug } = useParams<{ slug?:string }>();
 
 ### Embedded Animation
 
-The objects which can be put in `transition`, includes `LeftFade`, `RightFade`, `TopFade`, `BottomFade`, `LeftSlide`, `RightSlide`, `TopSlide`, `BottomSlide`.
+The object which can be put in `transition`, includes `LeftFade`, `RightFade`, `TopFade`, `BottomFade`, `LeftSlide`, `RightSlide`, `TopSlide`, `BottomSlide`.
 
 ## 💻 Development
 
