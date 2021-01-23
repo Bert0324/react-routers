@@ -4,11 +4,11 @@
 <h1 align="center">React Routers</h1>
 <p align="center">🌠A React Component for quick configuring route</p>
 <p align="center">
-<a href="https://github.com/Bert0324/react-routers/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Build Status"></a>
-<a href="https://www.npmjs.com/package/react-routers"><img src="https://badge.fury.io/js/react-routers.svg" alt="Code Coverage"></a>
-<a href="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"><img src="https://github.com/Bert0324/react-routers/pulls" alt="npm-v"></a>
-<a href="https://github.com/bert0324/react-routers"><img src="https://githubbadges.com/star.svg?user=bert0324&repo=react-routers&style=default" alt="npm-d"></a>
-<a href="https://github.com/bert0324/react-routers/fork"><img src="https://githubbadges.com/fork.svg?user=bert0324&repo=react-routers&style=default" alt="brotli"></a>
+<a href="https://github.com/Bert0324/react-routers/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="LICENCE"></a>
+<a href="https://www.npmjs.com/package/react-routers"><img src="https://badge.fury.io/js/react-routers.svg" alt="NPM VERSION"></a>
+<a href="https://github.com/Bert0324/react-routers/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PR WELCOME"></a>
+<a href="https://github.com/bert0324/react-routers"><img src="https://githubbadges.com/star.svg?user=bert0324&repo=react-routers&style=default" alt="STAR"></a>
+<a href="https://github.com/bert0324/react-routers/fork"><img src="https://githubbadges.com/fork.svg?user=bert0324&repo=react-routers&style=default" alt="FOLK"></a>
 </p>
 
 ## ⭐ Features
@@ -27,15 +27,26 @@
 
 ## 🎠 Example & Playground
 
-An example and playground of `react-routers` in [HERE](https://stackblitz.com/edit/react-routers-demo).
+```tsx
+import { Routers } from 'react-routers';
+
+const App = () => {
+    return (
+        <Routers
+            routers={[
+                path: '/page1',
+                Component: async () => (await import('./async')).AsyncComponent
+            ]}
+        />
+    )
+}
+```
+
+A playground of `react-routers` in [HERE](https://stackblitz.com/edit/react-routers-demo).
 
 ## 📑 API
 
 ### Props of `Routers`
-
-```ts
-import { Routers } from 'react-routers';
-```
 
 #### `routers`
 
