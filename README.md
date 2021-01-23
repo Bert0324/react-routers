@@ -28,16 +28,19 @@
 ## 🎠 Example & Playground
 
 ```tsx
+import { BrowserRouter } from 'react-router-dom';
 import { Routers } from 'react-routers';
 
 const App = () => {
     return (
-        <Routers
-            routers={[
-                path: '/page1',
-                Component: async () => (await import('./async')).AsyncComponent
-            ]}
-        />
+        <BrowserRouter basename='prefix'>
+            <Routers
+                routers={[
+                    path: '/page',
+                    Component: async () => (await import('./async')).AsyncComponent
+                ]}
+            />
+        </BrowserRouter>
     )
 }
 ```
