@@ -1,10 +1,10 @@
-import React, { lazy, Suspense, FC, memo, useState, useMemo, useEffect, useCallback } from 'react';
-import { Route, withRouter, useHistory } from 'react-router-dom';
+import React, { Suspense, FC, memo, useState, useMemo, useEffect, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { throttle } from 'lodash-es';
-import { IPageRouter, IRouterProps } from '../../index.d';
+import { IRouterProps } from '../../index.d';
 import { Provider, useRefContext } from '../context/context';
-import { KeepAlive } from './KeepAlive';
 import { findMatchRoute } from '../utils/utils';
+import { usePaths } from './paths';
 
 /**
  * router
@@ -31,64 +31,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
         );
     }, [data.stack, fallback, history.location.pathname]);
 
-    const paths = useMemo(() => {
-        data.map = {};
-        /**
-         * config path
-         * @param params 
-         */
-        const Page = (params: IPageRouter) => {
-            if (!params.Component) return false;
-            let alive = false;
-            if (keepAlive !== undefined) alive = keepAlive;
-            if (params.keepAlive !== undefined) alive = params.keepAlive;
-
-            data.map[params.path] = {
-                name: params.name || '',
-                beforeRoute: params.beforeRoute,
-                afterRoute: params.afterRoute,
-                alive,
-                selfMatched: [],
-                path: params.path,
-                switchRoute,
-                transition: params.transition || transition,
-                delay: delayLoad,
-                haveBeforeEach: !!beforeEach,
-                ready: false
-            };
-
-            const waitForComponent = async () => {
-                const asyncTask = () => new Promise<void>(resolve => setTimeout(() => resolve(), 2000));
-                await asyncTask();
-                const component = await params.Component!();
-                setTimeout(() => data.map[params.path].ready = true);
-                return component;
-            };
-            const Component = lazy(async () => ({ default: withRouter(await waitForComponent()) }));
-            return (
-                <Route path='*' key={params.path}>
-                    <KeepAlive path={params.path}>
-                        <Component />
-                    </KeepAlive>
-                </Route>
-            );
-        };
-
-        /**
-         * joint path
-         * @param acc 
-         * @param crr 
-         * @param rootPath 
-         */
-        const createPage = (acc: JSX.Element[], crr: IPageRouter, rootPath?: string) => {
-            crr.path = (rootPath || '') + crr.path;
-            const page = Page(crr);
-            if (page) acc.push(page);
-            crr.children?.forEach?.((child) => createPage(acc, child, crr.path));
-            return acc;
-        };
-        return routers.reduce<JSX.Element[]>((acc, crr) => createPage(acc, crr), []);
-    }, [keepAlive, routers, switchRoute]);
+    const paths = usePaths(routers, keepAlive, switchRoute, transition, delay, beforeEach);
 
     const notEnterHandler = (from: string, redirect?: boolean) => {
         data.isReplace = true && !redirect;

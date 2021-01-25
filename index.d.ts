@@ -166,6 +166,7 @@ declare module 'react-routers' {
      * get current configuration
      */
     const useRefContext: () => IRefObj | null;
+    const Fade: ITransition;
     const LeftFade: ITransition;
     const RightFade: ITransition;
     const TopFade: ITransition;
@@ -174,11 +175,12 @@ declare module 'react-routers' {
     const RightSlide: ITransition;
     const TopSlide: ITransition;
     const BottomSlide: ITransition;
-    export { 
+    export {
         Routers, 
         useActive, 
         useParams, 
         useRefContext,
+        Fade,
         LeftFade,
         RightFade,
         TopFade,

@@ -71,6 +71,8 @@ interface IPageRouter {
     Component?: () => (Promise<ComponentType<any>> | ComponentType<any>);
     /**
      * children configuration
+     * - child node will inherit parent node configuration
+     * - child node configuration has higher priority than parent node configuration
      */
     children?: IPageRouter[];
     /**
