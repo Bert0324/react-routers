@@ -10,7 +10,7 @@ const Slide = {
     delay: 500
 };
 
-const Fade = {
+export const Fade = {
     ...Slide,
     match: {
         ...Slide.match,

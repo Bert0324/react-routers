@@ -35,6 +35,7 @@ const App: FC = () => {
                     {
                         path: '/page2',  // test/page2
                         Component: async () => () => <div style={{ height: '80vh', width: '80vw', backgroundColor: 'blue' }}><Link to='/page2/page3'>page2</Link></div>,
+                        keepAlive: true,
                         children: [
                             {
                                 path: '/:page',     // test/page2/page3
@@ -45,14 +46,14 @@ const App: FC = () => {
                                     return <>page3</>
                                 },
                                 beforeRoute: (from, to) => {
-                                    return false;
+                                    // return false;
                                 },
                             }
                         ]
                     }
                 ]}
                 beforeEach={async (from, to) => {
-                    // await asyncTask();
+                    await asyncTask();
                     console.log('beforeEach', from, to, data);
                 }}
                 redirect='/page1'
