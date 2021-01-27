@@ -94,6 +94,10 @@ export interface IPageRouter {
      * transition animation
      */
     transition?: ITransition;
+    /**
+     * the priority to prefetch
+     */
+    prefetch?: number;
 }
 
 /**
