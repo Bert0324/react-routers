@@ -1,7 +1,6 @@
 import React, { FC, memo, useEffect, useState } from 'react';
 import { matchPath, useHistory } from 'react-router';
 import { useRefContext } from '../context/context';
-import { EffectHook } from '../../index.d';
 import { filterMatchRoutes, getWithinTime } from '../utils/utils';
 
 export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
@@ -40,23 +39,15 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
             if (ready) {
                 // call active hooks
                 if (currentMatch) {
-                    let collectDeactives = false;
-                    if (!data.deactives[config.path]) {
-                        collectDeactives = true;
-                        data.deactives[config.path] = {};
-                    }
                     filterMatchRoutes(data.actives, config.path).forEach(
-                        effects => Object.keys(effects).forEach(key => {
-                            const deactive = effects[key]?.();
-                            if (collectDeactives && Object.prototype.toString.call(deactive) === '[object Function]') {
-                                data.deactives[config.path][key] = deactive as EffectHook;
-                            }
-                        })
+                        effects => Object.keys(effects).forEach(
+                            key => effects?.[key]?.()
+                        )
                     );
                 } else if (lastMatched) {
                     filterMatchRoutes(data.deactives, config.path).forEach(
                         effects => Object.keys(effects).forEach(
-                            key => data.deactives[config.path]?.[key]?.()
+                            key => effects?.[key]?.()
                         )
                     );
                 }

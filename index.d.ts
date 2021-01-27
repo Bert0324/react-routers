@@ -1,4 +1,5 @@
 import { FC, CSSProperties, ComponentType, DependencyList } from 'react';
+import { match } from 'react-router';
 
 interface IConfig {
     name: string;
@@ -24,12 +25,12 @@ export interface IRefObj {
     };
     actives: {
         [path: string]: {
-            [id: string]: ActiveHook
+            [id: string]: EffectHook
         };
     };
     deactives: {
         [path: string]: {
-            [id: string]: ActiveHook;
+            [id: string]: EffectHook;
         }
     };
     matched: boolean[];
@@ -42,14 +43,13 @@ export type ITransition = {
     notMatch: CSSProperties;
     trans: CSSProperties;
     /**
-     * 
+     * keep component after unmatched
      * - default is `500`ms
      */
     delay?: number;
 };
 export type EffectHook = () => void;
-export type ActiveHook = () => EffectHook | void | undefined;
-export type UseActive = (effect: ActiveHook, deps?: DependencyList) => void;
+export type ActiveHook = (effect: EffectHook, deps?: DependencyList) => void;
 
 /**
  * Router Configuration
@@ -158,7 +158,11 @@ declare module 'react-routers' {
     /**
      * triggered when first entering route and every time active it
      */
-    const useActive: UseActive;
+    const useActive: ActiveHook;
+    /**
+     * `useRouteMatch` like <https://reactrouter.com/web/api/Hooks/useroutematch>
+     */
+    const useRouteMatch: <T = {}>() => match<T>;
     /**
      * `useParams` like <https://reactrouter.com/core/api/Hooks/useparams>
      */
@@ -180,6 +184,7 @@ declare module 'react-routers' {
         Routers, 
         useActive, 
         useParams, 
+        useRouteMatch,
         useRefContext,
         Fade,
         LeftFade,
