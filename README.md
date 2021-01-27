@@ -2,7 +2,7 @@
 
 <p align="center"><img src="./assets/icon.jpeg" alt="fre logo" width="130"></p>
 <h1 align="center">React Routers</h1>
-<p align="center">🌠A React Component for quick configuring route</p>
+<p align="center">🌠 A React Component for quick configuring route</p>
 <p align="center">
 <a href="https://github.com/Bert0324/react-routers/blob/main/LICENCE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="LICENCE"></a>
 <a href="https://www.npmjs.com/package/react-routers"><img src="https://badge.fury.io/js/react-routers.svg" alt="NPM VERSION"></a>
