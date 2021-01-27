@@ -70,7 +70,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
                 const component = await params.Component!();
                 setTimeout(() => {
                     data.map[params.path].ready = true;
-                    data.preload[params.path].ready = true;
+                    if (data.preload[params.path]) data.preload[params.path].ready = true;
                 });
                 return component;
             };

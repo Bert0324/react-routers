@@ -104,7 +104,7 @@ export interface IPageRouter {
     transition?: ITransition;
     /**
      * the priority to prefetch
-     * - larger is earlier
+     * - smaller is earlier
      */
     prefetch?: number;
 }
