@@ -1,4 +1,4 @@
-import { FC, CSSProperties, ComponentType } from 'react';
+import { FC, CSSProperties, ComponentType, DependencyList } from 'react';
 
 interface IConfig {
     name: string;
@@ -49,6 +49,7 @@ export type ITransition = {
 };
 export type EffectHook = () => void;
 export type ActiveHook = () => EffectHook | void | undefined;
+export type UseActive = (effect: ActiveHook, deps?: DependencyList) => void;
 
 /**
  * Router Configuration
@@ -157,7 +158,7 @@ declare module 'react-routers' {
     /**
      * triggered when first entering route and every time active it
      */
-    const useActive: (effect: ActiveHook) => void;
+    const useActive: UseActive;
     /**
      * `useParams` like <https://reactrouter.com/core/api/Hooks/useparams>
      */
