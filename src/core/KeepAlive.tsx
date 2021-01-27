@@ -1,7 +1,7 @@
 import React, { FC, memo, useEffect, useState } from 'react';
 import { matchPath, useHistory } from 'react-router';
 import { useRefContext } from '../context/context';
-import { filterMatchRoutes, getWithinTime } from '../utils/utils';
+import { filterMatchRoutes, findMatchPath, getWithinTime } from '../utils/utils';
 
 export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
     const history = useHistory();
@@ -9,50 +9,49 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
     const [firstMatched, setFirstMatched] = useState(false);
     const [delayMatch, setDelayMatch] = useState(false);
     const data = useRefContext()!;
-    const config = data.map[path];
 
     const checkMatch = () => {
         // after history change callback in router
         setTimeout(async () => {
             let currentMatch = !!matchPath(history.location.pathname, {
-                path: config.path,
+                path: data.map[path].path,
                 exact: true
             });
-            const lastMatched = config.selfMatched[config.selfMatched.length - 1];
+            const lastMatched = data.map[path].selfMatched[data.map[path].selfMatched.length - 1];
             if (lastMatched && currentMatch) {
                 return;
             }
             // if switchRoute, only match one route
-            if (config.switchRoute && data.matched.filter(Boolean).length !== 0) {
+            if (data.map[path].switchRoute && data.matched.filter(Boolean).length !== 0) {
                 currentMatch = false;
             }
 
             setMatch(currentMatch);
-            config.selfMatched.push(currentMatch);
+            data.map[path].selfMatched.push(currentMatch);
             if (currentMatch && !firstMatched) {
                 setFirstMatched(true);
             }
 
             // wait until async component is ready
-            const ready = config?.ready || await getWithinTime(() => config?.ready);
+            const ready = data.map[path]?.ready || await getWithinTime(() => data.map[path]?.ready);
 
             if (ready) {
                 // call active hooks
                 if (currentMatch) {
-                    filterMatchRoutes(data.actives, config.path).forEach(
+                    filterMatchRoutes(data.actives, data.map[path].path).forEach(
                         effects => Object.keys(effects).forEach(
                             key => effects?.[key]?.()
                         )
                     );
                 } else if (lastMatched) {
-                    filterMatchRoutes(data.deactives, config.path).forEach(
+                    filterMatchRoutes(data.deactives, data.map[path].path).forEach(
                         effects => Object.keys(effects).forEach(
                             key => effects?.[key]?.()
                         )
                     );
                 }
             }
-        }, (config.haveBeforeEach || !!config.beforeRoute) ? config.delay : 0);
+        }, (data.map[path].haveBeforeEach || !!data.map[path].beforeRoute) ? data.map[path].delay : 0);
     };
 
     useEffect(() => {
@@ -61,30 +60,36 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
     }, []);
 
     useEffect(() => {
-        setTimeout(() => setDelayMatch(match), config.transition?.delay || 500);
+        setTimeout(() => setDelayMatch(match), data.map[path].transition?.delay || 500);
     }, [match]);
 
     // prefetch next
     useEffect(() => {
         if (firstMatched) {
-            const next = Object.values(data.preload).filter(({ ready }) => !ready).sort(({ priority: a }, { priority: b }) => Number(a) - Number(b))?.[0];
-            if (next) {
-                delete data.preload[next.path];
-                next.factory();
-            }
+            setTimeout(async () => {
+                const ready = data.map[path]?.ready || await getWithinTime(() => data.map[path]?.ready);
+                if (ready) {
+                    data.map[path].prefetch?.forEach(_fetchPath => {
+                        const fetchPath = findMatchPath(data.map, _fetchPath);
+                        if (!data.map[fetchPath]?.ready) {
+                            data.preload[fetchPath]?.();
+                        }
+                    });
+                }
+            });
         }
     }, [firstMatched]);
 
     const transitionStyle = {
-        ...config.transition?.trans,
-        ...(match ? config.transition?.match : config.transition?.notMatch)
+        ...data.map[path].transition?.trans,
+        ...(match ? data.map[path].transition?.match : data.map[path].transition?.notMatch)
     };
 
-    const actualDisplay = config.transition ? delayMatch : match;
+    const actualDisplay = data.map[path].transition ? delayMatch : match;
 
     return (
         <>
-            {config.alive ? 
+            {data.map[path].alive ? 
                 <>
                     {firstMatched ?    
                         <div 
@@ -95,9 +100,9 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
                         : null}
                 </>
             : 
-            <div style={transitionStyle}>
-                {actualDisplay ? children : null}
-            </div>}
+                <div style={transitionStyle}>
+                    {actualDisplay ? children : null}
+                </div>}
         </>
     );
 }, (prev, next) => prev.path === next.path);

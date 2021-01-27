@@ -13,6 +13,7 @@ interface IConfig {
     delay: number;
     haveBeforeEach: boolean;
     ready: boolean;
+    prefetch?: string[];
 }
 
 export interface IRefObj {
@@ -35,12 +36,7 @@ export interface IRefObj {
     };
     matched: boolean[];
     preload: {
-        [path: string]: {
-            priority: number;
-            factory: () => Promise<{ default: any }>;
-            ready: boolean;
-            path: string;
-        }
+        [path: string]: () => Promise<{ default: any }>;
     };
 }
 
@@ -103,10 +99,9 @@ export interface IPageRouter {
      */
     transition?: ITransition;
     /**
-     * the priority to prefetch
-     * - smaller is earlier
+     * the path list to prefetch
      */
-    prefetch?: number;
+    prefetch?: string[];
 }
 
 /**

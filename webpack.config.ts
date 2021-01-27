@@ -32,7 +32,9 @@ export default {
         ...(isBuilding ? {
             libraryTarget: 'umd',
             library: 'react-routers'
-        } : undefined)
+        } : {
+            publicPath: '/'
+        })
     },
     target: 'web',
     module: {
@@ -144,5 +146,6 @@ export default {
         open: true,
         disableHostCheck: true,
         proxy: {},
+        historyApiFallback: true
     },
 } as Configuration;

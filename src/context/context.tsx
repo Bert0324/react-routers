@@ -9,7 +9,7 @@ const createStore = (): IRefObj => ({
     actives: {},
     deactives: {},
     matched: [],
-    preload: []
+    preload: {}
 });
 const Context = createContext<IRefObj | null>(null);
 export const useRefContext = () => useContext(Context);
