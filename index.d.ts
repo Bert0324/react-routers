@@ -160,6 +160,10 @@ declare module 'react-routers' {
      */
     const useActive: ActiveHook;
     /**
+     * triggered when leave the route
+     */
+    const useDeactive: ActiveHook;
+    /**
      * `useRouteMatch` like <https://reactrouter.com/web/api/Hooks/useroutematch>
      */
     const useRouteMatch: <T = {}>() => match<T>;
@@ -183,6 +187,7 @@ declare module 'react-routers' {
     export {
         Routers, 
         useActive, 
+        useDeactive,
         useParams, 
         useRouteMatch,
         useRefContext,
