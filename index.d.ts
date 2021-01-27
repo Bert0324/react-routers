@@ -100,6 +100,7 @@ export interface IPageRouter {
     transition?: ITransition;
     /**
      * the path list to prefetch
+     * - parent node prefetch will be append after current node prefetch
      */
     prefetch?: string[];
 }

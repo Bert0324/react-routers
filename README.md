@@ -15,7 +15,8 @@
 
 - Static Routes like [`react-router-config`](https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config)
 - Route Guard and `keep-alive` like `Vue`
-- Auto Lazy Load and **prefetch**
+- Auto Lazy Load
+- Easy **prefetch**
 - Simple Transition Animation
 - Change `document.title` with Configuration
 - Tiny Size, unpacked 13KB
@@ -97,6 +98,11 @@ interface IPageRouter {
      * transition animation
      */
     transition?: ITransition;
+    /**
+     * the path list to prefetch
+     * - parent node prefetch will be append after current node prefetch
+     */
+    prefetch?: string[];
 }
 ```
 

@@ -93,9 +93,9 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
          */
         const createPage = (acc: JSX.Element[], crr: IPageRouter, rootPath?: string, rootParams?: IPageRouter) => {
             crr.path = (rootPath || '') + crr.path;
-            const page = Page({ ...rootParams, ...crr });
+            const page = Page({ ...rootParams, ...crr, prefetch: [...crr?.prefetch || [], ...rootParams?.prefetch || []] });
             if (page) acc.push(page);
-            crr.children?.forEach?.((child) => createPage(acc, child, crr.path, { ...rootParams, ...crr }));
+            crr.children?.forEach?.((child) => createPage(acc, child, crr.path, { ...rootParams, ...crr, prefetch: [...crr?.prefetch || [], ...rootParams?.prefetch || []] }));
             return acc;
         };
         return routers.reduce<JSX.Element[]>((acc, crr) => createPage(acc, crr), []);
