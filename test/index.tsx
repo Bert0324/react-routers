@@ -15,7 +15,7 @@ const App: FC = () => {
     }, []);
 
     return (
-        <BrowserRouter>
+        <BrowserRouter basename='/'>
             <Routers 
                 transition={LeftFade}
                 routers={[
@@ -34,17 +34,15 @@ const App: FC = () => {
                     },
                     {
                         path: '/page2',  // test/page2
-                        Component: async () => () => <div style={{ height: '80vh', width: '80vw', backgroundColor: 'blue' }}><Link to='/page2/page3'>page2</Link></div>,
+                        Component: async () => (await import('./async2')).AsyncTwoComponent,
                         keepAlive: true,
+                        prefetch: 100,
                         children: [
                             {
                                 path: '/:page',     // test/page2/page3
                                 name: 'page3',
-                                Component: async () => () => {
-                                    // const params = useParams();
-                                    // console.log(params);
-                                    return <>page3</>
-                                },
+                                // prefetch: 10,
+                                Component: async () => (await import('./async3')).AsyncThreeComponent,
                                 beforeRoute: (from, to) => {
                                     // return false;
                                 },
@@ -53,7 +51,7 @@ const App: FC = () => {
                     }
                 ]}
                 beforeEach={async (from, to) => {
-                    await asyncTask();
+                    // await asyncTask();
                     console.log('beforeEach', from, to, data);
                 }}
                 redirect='/page1'

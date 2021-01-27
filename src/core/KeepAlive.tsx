@@ -64,6 +64,17 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
         setTimeout(() => setDelayMatch(match), config.transition?.delay || 500);
     }, [match]);
 
+    // prefetch next
+    useEffect(() => {
+        if (firstMatched) {
+            const next = Object.values(data.preload).filter(({ ready }) => !ready).sort(({ priority: a }, { priority: b }) => Number(a) - Number(b))?.[0];
+            if (next) {
+                delete data.preload[next.path];
+                next.factory();
+            }
+        }
+    }, [firstMatched]);
+
     const transitionStyle = {
         ...config.transition?.trans,
         ...(match ? config.transition?.match : config.transition?.notMatch)

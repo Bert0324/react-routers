@@ -15,7 +15,7 @@
 
 - Static Routes like [`react-router-config`](https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config)
 - Route Guard and `keep-alive` like `Vue`
-- Auto Lazy Load
+- Auto Lazy Load and **prefetch**
 - Simple Transition Animation
 - Change `document.title` with Configuration
 - Tiny Size, unpacked 13KB
