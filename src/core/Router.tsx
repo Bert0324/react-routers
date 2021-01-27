@@ -36,9 +36,9 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
         data.map = {};
         data.preload = {};
 
-        const lazyWithPreload = <T extends ComponentType<any>>(factory: () => Promise<{ default: T }>, path: string, priority?: number) => {
+        const lazyWithPreload = <T extends ComponentType<any>>(factory: () => Promise<{ default: T }>, path: string) => {
             const Component = lazy(factory);
-            if (priority) data.preload[path] = { factory, priority, ready: false, path };
+            data.preload[path] = factory;
             return Component;
         };
 
@@ -63,21 +63,18 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
                 transition: params.transition || transition,
                 delay: delayLoad,
                 haveBeforeEach: !!beforeEach,
-                ready: false
+                ready: false,
+                prefetch: params.prefetch
             };
 
             const waitForComponent = async () => {
                 const component = await params.Component!();
-                setTimeout(() => {
-                    data.map[params.path].ready = true;
-                    data.preload[params.path].ready = true;
-                });
+                setTimeout(() => data.map[params.path].ready = true);
                 return component;
             };
             const Component = lazyWithPreload(
                 async () => ({ default: withRouter(await waitForComponent()) }), 
-                params.path,
-                params.prefetch
+                params.path
             );
             return (
                 <Route path='*' key={params.path}>

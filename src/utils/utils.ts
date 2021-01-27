@@ -42,4 +42,5 @@ export const getWithinTime = async <T>(task: () => T) => {
         const res = await setTimeoutTask(task);
         if (res) return res;
     }
+    return undefined;
 };
