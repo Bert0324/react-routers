@@ -80,12 +80,12 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
         }
     }, [firstMatched]);
 
+    const actualDisplay = data.map[path].transition ? delayMatch : match;
+
     const transitionStyle = {
         ...data.map[path].transition?.trans,
         ...(match ? data.map[path].transition?.match : data.map[path].transition?.notMatch)
     };
-
-    const actualDisplay = data.map[path].transition ? delayMatch : match;
 
     return (
         <>
