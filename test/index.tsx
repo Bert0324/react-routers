@@ -36,12 +36,12 @@ const App: FC = () => {
                         path: '/page2',  // test/page2
                         Component: async () => (await import('./async2')).AsyncTwoComponent,
                         keepAlive: true,
-                        prefetch: 100,
+                        prefetch: 3,
                         children: [
                             {
                                 path: '/:page',     // test/page2/page3
                                 name: 'page3',
-                                // prefetch: 10,
+                                prefetch: 2,
                                 Component: async () => (await import('./async3')).AsyncThreeComponent,
                                 beforeRoute: (from, to) => {
                                     // return false;
