@@ -164,36 +164,38 @@ or directly use embedded animation objects.
 
 ### Hooks
 
-#### `useActive`
+#### `useActive` & `useDeactive`
 
-The hook triggered when the route match the component's route in configuration.
+The hook triggered when the component's active state has changed.
 
 WHEN DO YOU NEED IT?
 
 - If a component is set as `keepAlive`, and you want to trigger something when the component is activated.
 
 ```ts
-import { useActive } from 'react-routers';
+import { useActive, useDeactive } from 'react-routers';
 
 useActive(() => {
     /* Called when the component is activated. */
-    return () => {
-         /* Called when the component is deactivated. */
-    }
+});
+
+useDeactive(() => {
+    /* Called when the component is deactivated. */
 });
 ```
 
-#### `useParams`
+#### `useParams` & `useRouteMatch`
 
-A wrapped function of [`useParams`](https://reactrouter.com/web/api/Hooks/useroutematch).
+A wrapped function of [`useParams`](https://reactrouter.com/web/api/Hooks/useroutematch) & [`useRouteMatch`](https://reactrouter.com/web/api/Hooks/useroutematch)
 
 As `react-router` don't have the configuration configured in `react-routers`, if you want to get params in route, you should use this hook.
 
 ```ts
-import { useParams } from 'react-routers';
+import { useParams, useRouteMatch } from 'react-routers';
 
 // /blog/:slug
 const { slug } = useParams<{ slug?:string }>(); 
+const match = useRouteMatch<{ slug?:string }>();
 ```
 
 ### Embedded Animation
