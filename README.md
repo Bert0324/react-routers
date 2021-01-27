@@ -206,7 +206,7 @@ const match = useRouteMatch<{ slug?:string }>();
 
 ### Embedded Animation
 
-The object which can be put in `transition`, includes `LeftFade`, `RightFade`, `TopFade`, `BottomFade`, `LeftSlide`, `RightSlide`, `TopSlide`, `BottomSlide`.
+The object which can be put in `transition`, includes `Fade`, `LeftFade`, `RightFade`, `TopFade`, `BottomFade`, `LeftSlide`, `RightSlide`, `TopSlide`, `BottomSlide`.
 
 ## 💻 Development
 
