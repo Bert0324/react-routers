@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useActive, useRefContext } from 'react-routers';
+import { useActive, useDeactive } from '../src';
 
 const Sub: FC = () => {
 
@@ -15,16 +15,14 @@ const Sub: FC = () => {
 
 export const AsyncComponent: FC = () => {
     const [show, setShow] = useState<boolean>(true);
-    const data = Number(new Date());
-    useActive(() => {
-        console.log('page1 active', data);
-        return () => {
-            console.log('page1 deactive', data);
-        }
-    });
 
-    const ref = useRefContext();
-    console.log(ref)
+    useActive(() => {
+        console.log('page1 active', show);
+    }, [show]);
+
+    useDeactive(() => {
+        console.log('page1 deactive', show);
+    }, [show]);
 
     return (
         <div style={{ height: '80vh', width: '80vw', backgroundColor: 'yellow' }}>

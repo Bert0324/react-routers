@@ -24,7 +24,7 @@ export default {
         'react-router-dom': 'react-router-dom',
         'react-router': 'react-router'
     } : undefined,
-    devtool: 'source-map',
+    devtool: 'cheap-source-map',
     entry: `${__dirname}/${isBuilding ? 'src' : 'test'}/index.ts${isBuilding ? '' : 'x'}`,
     output: {
         path: `${__dirname}/dist`,
@@ -115,7 +115,7 @@ export default {
         }),
         new CleanWebpackPlugin(),
     ].filter(Boolean),
-    optimization: {
+    optimization: isBuilding ? {
         minimize: true,
         minimizer: [
             new TerserWebpackPlugin({
@@ -136,7 +136,7 @@ export default {
                 
             }),
         ]
-    },
+    } : undefined,
     devServer: {
         contentBase: `${__dirname}/dist`,
         compress: true,
