@@ -24,7 +24,7 @@ export default {
         'react-router-dom': 'react-router-dom',
         'react-router': 'react-router'
     } : undefined,
-    devtool: 'cheap-source-map',
+    devtool: isBuilding ? undefined : 'source-map',
     entry: `${__dirname}/${isBuilding ? 'src' : 'test'}/index.ts${isBuilding ? '' : 'x'}`,
     output: {
         path: `${__dirname}/dist`,

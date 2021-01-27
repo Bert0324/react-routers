@@ -34,6 +34,14 @@ export interface IRefObj {
         }
     };
     matched: boolean[];
+    preload: {
+        [path: string]: {
+            priority: number;
+            factory: () => Promise<{ default: any }>;
+            ready: boolean;
+            path: string;
+        }
+    };
 }
 
 export type IBeforeRoute = (from: string, to: string) => boolean | undefined | void | Promise<boolean | undefined | void>;
@@ -96,6 +104,7 @@ export interface IPageRouter {
     transition?: ITransition;
     /**
      * the priority to prefetch
+     * - larger is earlier
      */
     prefetch?: number;
 }

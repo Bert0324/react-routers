@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, FC, memo, useState, useMemo, useEffect, useCallback } from 'react';
+import React, { lazy, Suspense, FC, memo, useState, useMemo, useEffect, useCallback, ComponentType } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Route, withRouter } from 'react-router';
 import { throttle } from 'lodash-es';
@@ -34,6 +34,14 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
 
     const paths = useMemo(() => {
         data.map = {};
+        data.preload = {};
+
+        const lazyWithPreload = <T extends ComponentType<any>>(factory: () => Promise<{ default: T }>, path: string, priority?: number) => {
+            const Component = lazy(factory);
+            if (priority) data.preload[path] = { factory, priority, ready: false, path };
+            return Component;
+        };
+
         /**
          * config path
          * @param params 
@@ -57,13 +65,20 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
                 haveBeforeEach: !!beforeEach,
                 ready: false
             };
-    
+
             const waitForComponent = async () => {
                 const component = await params.Component!();
-                setTimeout(() => data.map[params.path].ready = true);
+                setTimeout(() => {
+                    data.map[params.path].ready = true;
+                    data.preload[params.path].ready = true;
+                });
                 return component;
             };
-            const Component = lazy(async () => ({ default: withRouter(await waitForComponent()) }));
+            const Component = lazyWithPreload(
+                async () => ({ default: withRouter(await waitForComponent()) }), 
+                params.path,
+                params.prefetch
+            );
             return (
                 <Route path='*' key={params.path}>
                     <KeepAlive path={params.path}>
