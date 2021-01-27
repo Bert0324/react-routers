@@ -59,8 +59,6 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
             };
     
             const waitForComponent = async () => {
-                const asyncTask = () => new Promise<void>(resolve => setTimeout(() => resolve(), 2000));
-                await asyncTask();
                 const component = await params.Component!();
                 setTimeout(() => data.map[params.path].ready = true);
                 return component;
