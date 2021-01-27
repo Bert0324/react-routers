@@ -72,7 +72,7 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
                     data.map[path].prefetch?.forEach(_fetchPath => {
                         const fetchPath = findMatchPath(data.map, _fetchPath);
                         if (!data.map[fetchPath]?.ready) {
-                            data.preload[fetchPath]?.();
+                            setTimeout(() => data.preload[fetchPath]?.());
                         }
                     });
                 }
