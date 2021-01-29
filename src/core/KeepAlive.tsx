@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import React, { FC, memo, useEffect, useRef, useState } from 'react';
 import { matchPath, useHistory } from 'react-router';
 import { useRefContext } from '../context/context';
 import { filterMatchRoutes, findMatchPath, getWithinTime } from '../utils/utils';
@@ -9,6 +9,9 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
     const [firstMatched, setFirstMatched] = useState(false);
     const [delayMatch, setDelayMatch] = useState(false);
     const data = useRefContext()!;
+
+    const refMatch = useRef(match);
+    refMatch.current = match;
 
     const checkMatch = () => {
         // after history change callback in router
@@ -43,6 +46,7 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
                             key => effects?.[key]?.()
                         )
                     );
+                // call deactive hooks
                 } else if (lastMatched) {
                     filterMatchRoutes(data.deactives, data.map[path].path).forEach(
                         effects => Object.keys(effects).forEach(
@@ -72,7 +76,7 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
                     data.map[path].prefetch?.forEach(_fetchPath => {
                         const fetchPath = findMatchPath(data.map, _fetchPath);
                         if (!data.map[fetchPath]?.ready) {
-                            setTimeout(() => data.preload[fetchPath]?.());
+                            setTimeout(() => data.preload[fetchPath]?.(), data.map[path]?.prefetchDelay || 0);
                         }
                     });
                 }
@@ -80,11 +84,14 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
         }
     }, [firstMatched]);
 
-    const actualDisplay = data.map[path].transition ? delayMatch : match;
+    const actualDisplay = data.map[path].transition ? (match ? match : delayMatch) : match;
 
+    // if matched to display immediately, if not, set timeout to hide
     const transitionStyle = {
         ...data.map[path].transition?.trans,
-        ...(match ? data.map[path].transition?.match : data.map[path].transition?.notMatch)
+        ...(match ? (
+            delayMatch ? data.map[path].transition?.match : data.map[path].transition?.notMatch
+        ) : data.map[path].transition?.notMatch)
     };
 
     return (
@@ -93,7 +100,7 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
                 <>
                     {firstMatched ?    
                         <div 
-                            style={{ display: actualDisplay ? '' : 'none', ...transitionStyle }}
+                            style={{ position: 'absolute', display: actualDisplay ? '' : 'none', ...transitionStyle }}
                         >
                             {children}
                         </div>      

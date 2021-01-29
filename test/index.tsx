@@ -18,6 +18,7 @@ const App: FC = () => {
         <BrowserRouter>
             <Routers 
                 transition={LeftFade}
+                prefetchDelay={2000}
                 routers={[
                     // {
                     //     path: '/',

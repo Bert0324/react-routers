@@ -14,6 +14,7 @@ interface IConfig {
     haveBeforeEach: boolean;
     ready: boolean;
     prefetch?: string[];
+    prefetchDelay?: number;
 }
 
 export interface IRefObj {
@@ -156,6 +157,11 @@ export interface IRouterProps {
      * - default is `100`ms
      */
     delay?: number;
+    /**
+     * how much time delayed to start prefetch after main thread is idle
+     * - default is `0` ms
+     */
+    prefetchDelay?: number;
 }
 
 declare module 'react-routers' {

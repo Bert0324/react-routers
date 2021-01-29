@@ -37,8 +37,10 @@ const App = () => {
         <BrowserRouter basename='prefix'>
             <Routers
                 routers={[
-                    path: '/page',
-                    Component: async () => (await import('./async')).AsyncComponent
+                    {
+                        path: '/page',
+                        Component: async () => (await import('./Component')).Component
+                    }
                 ]}
             />
         </BrowserRouter>
@@ -167,6 +169,18 @@ type ITransition = {
 ```
 
 or directly use embedded animation objects.
+
+## `delay`
+
+loading delay
+
+- default is `100`ms
+
+## `prefetchDelay`
+
+how much time delayed to start prefetch after main thread is idle
+
+- default is `0` ms
 
 ### Hooks
 

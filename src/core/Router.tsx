@@ -10,7 +10,19 @@ import { KeepAlive } from './KeepAlive';
 /**
  * router
  */
-const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach, afterEach, style, keepAlive, switchRoute = true, transition, delay }) => {
+const Router: FC<IRouterProps> = memo(({ 
+    routers, 
+    fallback, 
+    redirect, 
+    beforeEach, 
+    afterEach, 
+    style, 
+    keepAlive, 
+    switchRoute = true, 
+    transition, 
+    delay,
+    prefetchDelay
+}) => {
     const history = useHistory();
     const [loading, _setLoading] = useState(true);
     const data = useRefContext()!;
@@ -64,7 +76,8 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
                 delay: delayLoad,
                 haveBeforeEach: !!beforeEach,
                 ready: false,
-                prefetch: params.prefetch
+                prefetch: params.prefetch,
+                prefetchDelay
             };
 
             const waitForComponent = async () => {
@@ -149,7 +162,7 @@ const Router: FC<IRouterProps> = memo(({ routers, fallback, redirect, beforeEach
         <div style={style}>
             <Suspense fallback={Loading}>
                 {loading ? Loading : null}
-                <div style={{ display: loading ? 'none' : '' }}>
+                <div style={{ display: loading ? 'none' : '', position: 'relative' }}>
                     {paths}
                 </div>
             </Suspense>
