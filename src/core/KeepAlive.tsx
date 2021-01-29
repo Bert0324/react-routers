@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect, useRef, useState } from 'react';
+import React, { CSSProperties, FC, memo, useEffect, useRef, useState } from 'react';
 import { matchPath, useHistory } from 'react-router';
 import { useRefContext } from '../context/context';
 import { filterMatchRoutes, findMatchPath, getWithinTime } from '../utils/utils';
@@ -87,7 +87,10 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
     const actualDisplay = data.map[path].transition ? (match ? match : delayMatch) : match;
 
     // if matched to display immediately, if not, set timeout to hide
-    const transitionStyle = {
+    const transitionStyle: CSSProperties = {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
         ...data.map[path].transition?.trans,
         ...(match ? (
             delayMatch ? data.map[path].transition?.match : data.map[path].transition?.notMatch
@@ -100,7 +103,7 @@ export const KeepAlive: FC<{ path: string }> = memo(({ children, path }) => {
                 <>
                     {firstMatched ?    
                         <div 
-                            style={{ position: 'absolute', display: actualDisplay ? '' : 'none', ...transitionStyle }}
+                            style={{ display: actualDisplay ? '' : 'none', ...transitionStyle }}
                         >
                             {children}
                         </div>      
