@@ -170,13 +170,13 @@ type ITransition = {
 
 or directly use embedded animation objects.
 
-## `delay`
+#### `delay`
 
 loading delay
 
 - default is `100`ms
 
-## `prefetchDelay`
+#### `prefetchDelay`
 
 how much time delayed to start prefetch after main thread is idle
 
